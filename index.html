@@ -21,10 +21,12 @@
           colors: {
             burg:       '#270809',
             'burg-mid': '#4A1018',
+            'burg-deep':'#1a0405',
             terra:      '#C04A28',
             'terra-lt': '#D9663F',
             gold:       '#C4993E',
             'gold-lt':  '#D4AF58',
+            'gold-pale':'#e8cc7a',
             cream:      '#F7F1E4',
             'cream-dk': '#EDE5D0',
             ink:        '#180404',
@@ -39,50 +41,73 @@
   </script>
 
   <style>
-    *, *::before, *::after { box-sizing: border-box; }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     html { scroll-behavior: smooth; }
-    body { font-family: 'DM Sans', system-ui, sans-serif; background: #F7F1E4; color: #270809; overflow-x: hidden; }
+    body { font-family: 'DM Sans', system-ui, sans-serif; background: #F7F1E4; color: #270809; overflow-x: hidden; -webkit-font-smoothing: antialiased; }
 
     /* ── Reveal on scroll ── */
     .reveal {
       opacity: 0;
-      transform: translateY(32px);
-      transition: opacity 0.75s cubic-bezier(.22,1,.36,1), transform 0.75s cubic-bezier(.22,1,.36,1);
+      transform: translateY(36px);
+      transition: opacity 0.85s cubic-bezier(.22,1,.36,1), transform 0.85s cubic-bezier(.22,1,.36,1);
     }
     .reveal.visible { opacity: 1; transform: translateY(0); }
 
     .reveal-x {
       opacity: 0;
-      transform: translateX(-28px);
-      transition: opacity 0.75s cubic-bezier(.22,1,.36,1), transform 0.75s cubic-bezier(.22,1,.36,1);
+      transform: translateX(-32px);
+      transition: opacity 0.85s cubic-bezier(.22,1,.36,1), transform 0.85s cubic-bezier(.22,1,.36,1);
     }
     .reveal-x.visible { opacity: 1; transform: translateX(0); }
 
     .reveal-r {
       opacity: 0;
-      transform: translateX(28px);
-      transition: opacity 0.75s cubic-bezier(.22,1,.36,1), transform 0.75s cubic-bezier(.22,1,.36,1);
+      transform: translateX(32px);
+      transition: opacity 0.85s cubic-bezier(.22,1,.36,1), transform 0.85s cubic-bezier(.22,1,.36,1);
     }
     .reveal-r.visible { opacity: 1; transform: translateX(0); }
+
+    .reveal-scale {
+      opacity: 0;
+      transform: scale(0.92);
+      transition: opacity 0.85s cubic-bezier(.22,1,.36,1), transform 0.85s cubic-bezier(.22,1,.36,1);
+    }
+    .reveal-scale.visible { opacity: 1; transform: scale(1); }
 
     /* ── Nav ── */
     #nav {
       background: transparent;
-      transition: background 0.35s ease, box-shadow 0.35s ease, backdrop-filter 0.35s ease;
+      transition: background 0.4s ease, box-shadow 0.4s ease, backdrop-filter 0.4s ease;
     }
     #nav.scrolled {
-      background: rgba(30, 5, 5, 0.96);
-      box-shadow: 0 2px 24px rgba(0,0,0,.35);
-      backdrop-filter: blur(10px);
+      background: rgba(26, 4, 5, 0.97);
+      box-shadow: 0 2px 32px rgba(0,0,0,.4);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
     }
+
+    /* Mobile menu */
+    #mobile-menu {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 40;
+      background: rgba(26,4,5,0.98);
+      backdrop-filter: blur(20px);
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 2.5rem;
+    }
+    #mobile-menu.open { display: flex; }
 
     /* ── Hero ghost text ── */
     .ghost-pasta {
       font-family: 'Cormorant Garant', serif;
-      font-size: clamp(6rem, 18vw, 22rem);
+      font-size: clamp(5rem, 20vw, 24rem);
       font-weight: 700;
       line-height: 1;
-      color: rgba(255,255,255,0.04);
+      color: rgba(255,255,255,0.035);
       letter-spacing: 0.15em;
       user-select: none;
       pointer-events: none;
@@ -91,42 +116,121 @@
     /* ── Section label ── */
     .section-label {
       font-family: 'DM Sans', sans-serif;
-      font-size: 0.7rem;
-      letter-spacing: 0.35em;
+      font-size: 0.68rem;
+      letter-spacing: 0.38em;
       text-transform: uppercase;
       color: #C4993E;
     }
 
-    /* ── Gold rule under headings ── */
-    .gold-rule::after {
-      content: '';
+    /* ── Gold divider line ── */
+    .gold-line {
       display: block;
-      width: 48px;
+      width: 56px;
       height: 2px;
-      background: linear-gradient(90deg, #C4993E, #D4AF58);
+      background: linear-gradient(90deg, #C4993E 0%, #D4AF58 60%, transparent 100%);
       margin: 20px auto 0;
       border-radius: 2px;
     }
 
-    /* ── Service cards ── */
+    /* ── Premium pasta cards ── */
     .pasta-card {
-      transition: transform 0.35s cubic-bezier(.22,1,.36,1), box-shadow 0.35s cubic-bezier(.22,1,.36,1);
+      position: relative;
+      background: linear-gradient(145deg, #5a1220 0%, #3d0c13 100%);
+      border: 1px solid rgba(196,153,62,0.12);
+      border-radius: 20px;
+      overflow: hidden;
+      transition: transform 0.4s cubic-bezier(.22,1,.36,1), box-shadow 0.4s cubic-bezier(.22,1,.36,1), border-color 0.3s ease;
+      cursor: pointer;
     }
     .pasta-card:hover {
-      transform: translateY(-8px);
-      box-shadow: 0 28px 52px rgba(0,0,0,.25);
+      transform: translateY(-10px);
+      box-shadow: 0 32px 64px rgba(0,0,0,.4), 0 0 0 1px rgba(196,153,62,0.25);
+      border-color: rgba(196,153,62,0.3);
     }
-    .pasta-card img {
-      transition: transform 0.6s cubic-bezier(.22,1,.36,1);
+    .pasta-card .card-img {
+      position: relative;
+      height: 220px;
+      overflow: hidden;
     }
-    .pasta-card:hover img { transform: scale(1.06); }
+    @media (max-width: 640px) {
+      .pasta-card .card-img { height: 200px; }
+    }
+    .pasta-card .card-img img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.7s cubic-bezier(.22,1,.36,1);
+      display: block;
+    }
+    .pasta-card:hover .card-img img { transform: scale(1.08); }
+    .pasta-card .card-img::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to bottom, transparent 40%, rgba(26,4,5,0.65) 100%);
+      pointer-events: none;
+    }
+
+    /* Badge on card image */
+    .card-badge {
+      position: absolute;
+      top: 14px;
+      left: 14px;
+      z-index: 2;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.6rem;
+      font-weight: 600;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      padding: 5px 12px;
+      border-radius: 999px;
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+    }
+    .badge-gold { background: rgba(196,153,62,0.22); color: #D4AF58; border: 1px solid rgba(196,153,62,0.4); }
+    .badge-terra { background: rgba(192,74,40,0.25); color: #D9663F; border: 1px solid rgba(192,74,40,0.45); }
+    .badge-green { background: rgba(60,140,60,0.2); color: #7bc97b; border: 1px solid rgba(60,140,60,0.35); }
+
+    /* Card body */
+    .card-body {
+      padding: 1.5rem 1.5rem 1.75rem;
+    }
+    .card-body .card-title {
+      font-family: 'Cormorant Garant', serif;
+      font-size: clamp(1.4rem, 4vw, 1.75rem);
+      font-weight: 700;
+      color: #F7F1E4;
+      line-height: 1.15;
+      margin-bottom: 0.6rem;
+      letter-spacing: 0.01em;
+    }
+    .card-body .card-desc {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.855rem;
+      line-height: 1.7;
+      color: rgba(247,241,228,0.55);
+    }
+
+    /* Shimmer line on card bottom */
+    .pasta-card::before {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, rgba(196,153,62,0.5), transparent);
+      opacity: 0;
+      transition: opacity 0.4s ease;
+    }
+    .pasta-card:hover::before { opacity: 1; }
 
     /* ── Gallery ── */
     .gallery-grid {
       display: grid;
-      gap: 10px;
-      grid-template-columns: 1fr 1fr 1fr;
-      grid-template-rows: 240px 240px;
+      gap: 12px;
+      grid-template-columns: 1.5fr 1fr 1fr;
+      grid-template-rows: 260px 260px;
     }
     .gallery-grid .g-feat {
       grid-column: 1;
@@ -135,54 +239,207 @@
     @media (max-width: 767px) {
       .gallery-grid {
         grid-template-columns: 1fr 1fr;
-        grid-template-rows: 180px 180px 180px;
+        grid-template-rows: 200px 200px 200px;
       }
       .gallery-grid .g-feat {
         grid-column: 1 / 3;
         grid-row: 1;
+        height: 240px;
       }
     }
     @media (max-width: 479px) {
       .gallery-grid {
-        grid-template-columns: 1fr;
-        grid-template-rows: auto;
+        grid-template-columns: 1fr 1fr;
+        grid-template-rows: 160px 160px 160px;
       }
       .gallery-grid .g-feat {
-        grid-column: 1;
+        grid-column: 1 / 3;
         grid-row: 1;
+        height: 200px;
       }
     }
     .gallery-grid > div {
       overflow: hidden;
-      border-radius: 12px;
+      border-radius: 16px;
+      position: relative;
     }
+    .gallery-grid > div::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to bottom, transparent 50%, rgba(26,4,5,0.5) 100%);
+      opacity: 0;
+      transition: opacity 0.4s ease;
+      pointer-events: none;
+    }
+    .gallery-grid > div:hover::after { opacity: 1; }
     .gallery-grid img {
       width: 100%;
       height: 100%;
       object-fit: cover;
-      transition: transform 0.6s cubic-bezier(.22,1,.36,1);
+      transition: transform 0.7s cubic-bezier(.22,1,.36,1);
+      display: block;
     }
-    .gallery-grid > div:hover img { transform: scale(1.07); }
+    .gallery-grid > div:hover img { transform: scale(1.08); }
 
     /* ── WhatsApp pulse ── */
-    .wa-btn {
-      animation: waPulse 2.4s ease infinite;
-    }
+    .wa-btn { animation: waPulse 2.6s ease infinite; }
     @keyframes waPulse {
-      0%, 100% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.45); }
-      55%       { box-shadow: 0 0 0 14px rgba(37, 211, 102, 0); }
+      0%, 100% { box-shadow: 0 0 0 0 rgba(37,211,102,0.5), 0 8px 24px rgba(0,0,0,0.3); }
+      55%       { box-shadow: 0 0 0 16px rgba(37,211,102,0), 0 8px 24px rgba(0,0,0,0.3); }
     }
 
-    /* ── Star colour ── */
+    /* ── Stars ── */
     .stars { color: #F5A623; }
 
-    /* ── Wave divider ── */
-    .wave-cream svg { display: block; }
-    .wave-burg  svg { display: block; }
+    /* ── Wave ── */
+    .wave svg { display: block; }
 
-    /* ── Hours table ── */
-    .hours-row { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid rgba(249,241,228,0.1); }
+    /* ── Hours ── */
+    .hours-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 16px;
+      border-bottom: 1px solid rgba(247,241,228,0.07);
+    }
     .hours-row:last-child { border-bottom: none; }
+
+    /* ── Concept pillars ── */
+    .pillar-card {
+      background: linear-gradient(135deg, rgba(74,16,24,0.4) 0%, rgba(26,4,5,0.2) 100%);
+      border: 1px solid rgba(196,153,62,0.1);
+      border-radius: 20px;
+      padding: 2rem 1.5rem;
+      text-align: center;
+      transition: border-color 0.3s ease, transform 0.35s cubic-bezier(.22,1,.36,1);
+    }
+    .pillar-card:hover {
+      border-color: rgba(196,153,62,0.3);
+      transform: translateY(-4px);
+    }
+
+    /* ── Hero floating badge ── */
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: rgba(255,255,255,0.07);
+      border: 1px solid rgba(196,153,62,0.28);
+      border-radius: 999px;
+      padding: 8px 20px;
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+    }
+
+    /* ── Scroll indicator ── */
+    .scroll-line {
+      width: 1px;
+      height: 40px;
+      background: linear-gradient(to bottom, rgba(247,241,228,0.5), transparent);
+      animation: scrollPulse 2s ease infinite;
+    }
+    @keyframes scrollPulse {
+      0%, 100% { opacity: 0.5; transform: scaleY(1); }
+      50%       { opacity: 1;   transform: scaleY(1.2); }
+    }
+
+    /* ── Premium CTA button ── */
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      background: linear-gradient(135deg, #C04A28, #D9663F);
+      color: #F7F1E4;
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 500;
+      font-size: 0.8rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      padding: 16px 36px;
+      border-radius: 999px;
+      transition: transform 0.25s ease, box-shadow 0.25s ease, background 0.25s ease;
+      box-shadow: 0 8px 24px rgba(192,74,40,0.35);
+      text-decoration: none;
+    }
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 14px 36px rgba(192,74,40,0.45);
+      background: linear-gradient(135deg, #d05530, #e8774d);
+    }
+    .btn-outline {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      background: transparent;
+      color: #F7F1E4;
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 500;
+      font-size: 0.8rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      padding: 15px 36px;
+      border-radius: 999px;
+      border: 1px solid rgba(247,241,228,0.28);
+      transition: border-color 0.25s ease, color 0.25s ease, transform 0.25s ease;
+      text-decoration: none;
+    }
+    .btn-outline:hover {
+      border-color: #C4993E;
+      color: #D4AF58;
+      transform: translateY(-2px);
+    }
+
+    /* ── Map container ── */
+    .map-wrapper {
+      position: relative;
+      border-radius: 20px;
+      overflow: hidden;
+      border: 1px solid rgba(196,153,62,0.15);
+      box-shadow: 0 24px 64px rgba(0,0,0,0.4);
+    }
+    .map-wrapper::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: 20px;
+      background: linear-gradient(135deg, rgba(196,153,62,0.08) 0%, transparent 60%);
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    /* ── Mobile-first touch targets ── */
+    @media (max-width: 640px) {
+      .btn-primary, .btn-outline { padding: 15px 28px; width: 100%; }
+      .card-body { padding: 1.25rem; }
+    }
+
+    /* ── Hamburger ── */
+    .hamburger-line {
+      display: block;
+      width: 24px;
+      height: 2px;
+      background: #F7F1E4;
+      border-radius: 2px;
+      transition: transform 0.3s ease, opacity 0.3s ease;
+    }
+    #hamburger.open .hamburger-line:nth-child(1) { transform: translateY(8px) rotate(45deg); }
+    #hamburger.open .hamburger-line:nth-child(2) { opacity: 0; }
+    #hamburger.open .hamburger-line:nth-child(3) { transform: translateY(-8px) rotate(-45deg); }
+
+    /* ── Number counter circles ── */
+    .stat-circle {
+      width: 72px;
+      height: 72px;
+      border-radius: 50%;
+      border: 1.5px solid rgba(196,153,62,0.3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(196,153,62,0.07);
+    }
   </style>
 </head>
 <body>
@@ -190,48 +447,63 @@
 <!-- ════════════════════════════════════════════
      STICKY NAV
 ════════════════════════════════════════════ -->
-<nav id="nav" class="fixed top-0 left-0 right-0 z-50 py-4 px-6 md:px-10 lg:px-16">
+<nav id="nav" class="fixed top-0 left-0 right-0 z-50 py-4 px-5 sm:px-8 lg:px-12">
   <div class="max-w-7xl mx-auto flex items-center justify-between">
 
     <!-- Logo -->
-    <a href="#hero" class="flex flex-col leading-none gap-0.5">
-      <span class="font-display text-xl md:text-2xl font-bold tracking-[0.2em] text-cream">PASTAGRAM</span>
-      <span class="section-label text-[0.6rem]" style="color:#C4993E; margin-top:1px;">Pasta Bar &middot; Sousse</span>
+    <a href="#hero" class="flex flex-col leading-none gap-0.5 z-50">
+      <span class="font-display text-xl sm:text-2xl font-bold tracking-[0.22em] text-cream">PASTAGRAM</span>
+      <span class="section-label text-[0.58rem]" style="color:#C4993E; margin-top:1px;">Pasta Bar &middot; Sousse</span>
     </a>
 
     <!-- Desktop links -->
-    <div class="hidden md:flex items-center gap-7">
-      <a href="#nos-pasta"  class="font-body text-xs tracking-[0.2em] uppercase text-cream/70 hover:text-gold transition-colors duration-200">Menu</a>
-      <a href="#galerie"    class="font-body text-xs tracking-[0.2em] uppercase text-cream/70 hover:text-gold transition-colors duration-200">Galerie</a>
-      <a href="#contact"    class="font-body text-xs tracking-[0.2em] uppercase text-cream/70 hover:text-gold transition-colors duration-200">Contact</a>
-      <a href="tel:+21694810110"
-         class="bg-terra hover:bg-terra-lt text-cream text-xs font-medium tracking-[0.15em] uppercase px-7 py-2.5 rounded-full transition-colors duration-200">
+    <div class="hidden md:flex items-center gap-8">
+      <a href="#nos-pasta"  class="font-body text-xs tracking-[0.22em] uppercase text-cream/60 hover:text-gold transition-colors duration-200">Menu</a>
+      <a href="#galerie"    class="font-body text-xs tracking-[0.22em] uppercase text-cream/60 hover:text-gold transition-colors duration-200">Galerie</a>
+      <a href="#contact"    class="font-body text-xs tracking-[0.22em] uppercase text-cream/60 hover:text-gold transition-colors duration-200">Contact</a>
+      <a href="tel:+21694810110" class="btn-primary" style="padding:11px 28px; font-size:0.72rem;">
         Commander
       </a>
     </div>
 
-    <!-- Mobile CTA -->
-    <a href="tel:+21694810110"
-       class="md:hidden bg-terra text-cream text-xs font-medium px-5 py-2.5 rounded-full">
-      Appeler
-    </a>
+    <!-- Mobile hamburger -->
+    <button id="hamburger" class="md:hidden flex flex-col gap-1.5 z-50 p-2 -mr-2" aria-label="Menu" onclick="toggleMenu()">
+      <span class="hamburger-line"></span>
+      <span class="hamburger-line"></span>
+      <span class="hamburger-line"></span>
+    </button>
   </div>
 </nav>
+
+<!-- Mobile Menu Overlay -->
+<div id="mobile-menu" role="dialog" aria-modal="true" aria-label="Navigation mobile">
+  <a href="#nos-pasta"  onclick="toggleMenu()" class="font-display text-cream text-4xl font-light italic hover:text-gold transition-colors">Menu</a>
+  <a href="#galerie"    onclick="toggleMenu()" class="font-display text-cream text-4xl font-light italic hover:text-gold transition-colors">Galerie</a>
+  <a href="#contact"    onclick="toggleMenu()" class="font-display text-cream text-4xl font-light italic hover:text-gold transition-colors">Contact</a>
+  <a href="tel:+21694810110" onclick="toggleMenu()" class="btn-primary mt-4" style="min-width:200px; justify-content:center;">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 11.5a19.79 19.79 0 01-3.07-8.72A2 2 0 012.18 1h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.91 8.15a16 16 0 006 6l.62-.62a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
+    +216 94 810 110
+  </a>
+  <p class="section-label mt-6">12h00 – 23h00 · Tous les jours</p>
+</div>
 
 
 <!-- ════════════════════════════════════════════
      HERO
 ════════════════════════════════════════════ -->
-<section id="hero" class="relative min-h-screen flex flex-col items-center justify-center overflow-hidden bg-burg">
+<section id="hero" class="relative min-h-screen flex flex-col items-center justify-center overflow-hidden bg-burg-deep">
 
   <!-- Background photo -->
   <div class="absolute inset-0">
     <img
-      src="https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=1800&q=80&auto=format&fit=crop"
+      src="https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=1800&q=85&auto=format&fit=crop"
       alt="Ambiance du Pasta Bar PASTAGRAM à Sousse"
       class="w-full h-full object-cover"
+      loading="eager"
     />
-    <div class="absolute inset-0" style="background: linear-gradient(160deg, rgba(27,5,5,0.92) 0%, rgba(39,8,9,0.82) 50%, rgba(60,14,14,0.88) 100%);"></div>
+    <div class="absolute inset-0" style="background: linear-gradient(160deg, rgba(22,4,4,0.93) 0%, rgba(35,7,8,0.84) 45%, rgba(55,12,12,0.9) 100%);"></div>
+    <!-- Grain overlay -->
+    <div class="absolute inset-0 opacity-30" style="background-image: url('data:image/svg+xml,%3Csvg viewBox=%220 0 256 256%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter id=%22noise%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%220.9%22 numOctaves=%224%22 stitchTiles=%22stitch%22/%3E%3C/filter%3E%3Crect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23noise)%22 opacity=%220.4%22/%3E%3C/svg%3E'); background-repeat: repeat; background-size: 200px;"></div>
   </div>
 
   <!-- Ghost PASTA text -->
@@ -239,60 +511,87 @@
     <span class="ghost-pasta">PASTA</span>
   </div>
 
-  <!-- Decorative vertical line -->
-  <div class="absolute left-8 top-0 bottom-0 w-px hidden lg:block" style="background: linear-gradient(to bottom, transparent, rgba(196,153,62,0.3) 30%, rgba(196,153,62,0.3) 70%, transparent);"></div>
+  <!-- Decorative vertical lines -->
+  <div class="absolute left-8 top-0 bottom-0 w-px hidden xl:block" style="background: linear-gradient(to bottom, transparent, rgba(196,153,62,0.25) 25%, rgba(196,153,62,0.25) 75%, transparent);"></div>
+  <div class="absolute right-8 top-0 bottom-0 w-px hidden xl:block" style="background: linear-gradient(to bottom, transparent, rgba(196,153,62,0.15) 30%, rgba(196,153,62,0.15) 70%, transparent);"></div>
 
   <!-- Content -->
-  <div class="relative z-10 text-center px-6 max-w-5xl mx-auto pt-24 pb-20">
+  <div class="relative z-10 text-center px-5 sm:px-8 max-w-5xl mx-auto pt-28 pb-24">
 
     <!-- Google rating pill -->
-    <div class="inline-flex items-center gap-2.5 bg-white/8 border border-gold/25 rounded-full px-5 py-2 mb-10">
-      <span class="stars text-sm">&#9733;&#9733;&#9733;&#9733;&#9733;</span>
+    <div class="hero-badge mb-10 mx-auto w-fit reveal" style="transition-delay:.1s">
+      <span class="stars text-sm leading-none">&#9733;&#9733;&#9733;&#9733;&#9733;</span>
       <span class="font-body text-cream text-sm font-medium">4,8 sur Google</span>
       <span class="w-px h-3 bg-cream/20 inline-block"></span>
-      <span class="font-body text-cream/50 text-xs">144 avis</span>
+      <span class="font-body text-cream/45 text-xs">144 avis</span>
     </div>
 
-    <h1 class="font-display text-cream font-bold leading-none tracking-widest mb-3"
-        style="font-size: clamp(3.5rem, 11vw, 9rem);">
+    <h1 class="font-display text-cream font-bold leading-none tracking-widest mb-4 reveal"
+        style="font-size: clamp(3.2rem, 13vw, 9.5rem); transition-delay:.2s;">
       PASTAGRAM
     </h1>
 
-    <p class="font-display italic text-gold font-light tracking-wide mb-6"
-       style="font-size: clamp(1.25rem, 3vw, 2.25rem);">
-      Pasta Bar
+    <p class="font-display italic text-gold font-light tracking-[0.12em] mb-8 reveal"
+       style="font-size: clamp(1.2rem, 3.5vw, 2.5rem); transition-delay:.3s;">
+      Pasta Bar — Sousse
     </p>
 
-    <p class="font-body text-cream/65 font-light leading-relaxed mb-12 max-w-lg mx-auto"
-       style="font-size: clamp(1rem, 1.5vw, 1.15rem);">
+    <!-- Gold ornament -->
+    <div class="flex items-center justify-center gap-4 mb-10 reveal" style="transition-delay:.35s;" aria-hidden="true">
+      <div style="width:40px; height:1px; background: linear-gradient(to right, transparent, rgba(196,153,62,0.6));"></div>
+      <svg width="10" height="10" viewBox="0 0 10 10" fill="#C4993E" xmlns="http://www.w3.org/2000/svg"><circle cx="5" cy="5" r="5"/></svg>
+      <div style="width:60px; height:1px; background: rgba(196,153,62,0.5);"></div>
+      <svg width="6" height="6" viewBox="0 0 6 6" fill="#C4993E" xmlns="http://www.w3.org/2000/svg"><circle cx="3" cy="3" r="3"/></svg>
+      <div style="width:60px; height:1px; background: rgba(196,153,62,0.5);"></div>
+      <svg width="10" height="10" viewBox="0 0 10 10" fill="#C4993E" xmlns="http://www.w3.org/2000/svg"><circle cx="5" cy="5" r="5"/></svg>
+      <div style="width:40px; height:1px; background: linear-gradient(to left, transparent, rgba(196,153,62,0.6));"></div>
+    </div>
+
+    <p class="font-body text-cream/60 font-light leading-relaxed mb-12 max-w-lg mx-auto reveal"
+       style="font-size: clamp(0.95rem, 1.6vw, 1.15rem); transition-delay:.4s;">
       Des pâtes fraîches préparées avec passion,<br class="hidden sm:block"/>
-      des saveurs d'Italie au c&oelig;ur de Sousse.
+      des saveurs d&rsquo;Italie au c&oelig;ur de Sousse.
     </p>
 
-    <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
-      <a href="tel:+21694810110"
-         class="w-full sm:w-auto bg-terra hover:bg-terra-lt text-cream font-body font-medium text-sm tracking-[0.15em] uppercase px-10 py-4 rounded-full transition-all duration-200 hover:scale-105 shadow-lg">
+    <div class="flex flex-col sm:flex-row items-center justify-center gap-4 reveal" style="transition-delay:.5s;">
+      <a href="tel:+21694810110" class="btn-primary w-full sm:w-auto">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 11.5a19.79 19.79 0 01-3.07-8.72A2 2 0 012.18 1h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.91 8.15a16 16 0 006 6l.62-.62a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
         Réserver une table
       </a>
-      <a href="#nos-pasta"
-         class="w-full sm:w-auto border border-cream/30 text-cream hover:border-gold hover:text-gold font-body font-medium text-sm tracking-[0.15em] uppercase px-10 py-4 rounded-full transition-all duration-200">
+      <a href="#nos-pasta" class="btn-outline w-full sm:w-auto">
         Voir la carte
       </a>
     </div>
   </div>
 
+  <!-- Stats strip -->
+  <div class="relative z-10 w-full border-t border-white/8 mt-4">
+    <div class="max-w-3xl mx-auto grid grid-cols-3 divide-x divide-white/8">
+      <div class="py-7 px-4 text-center reveal" style="transition-delay:.6s;">
+        <p class="font-display text-cream font-bold" style="font-size: clamp(1.5rem,4vw,2.2rem);">4,8</p>
+        <p class="section-label mt-1" style="font-size:0.58rem;">Note Google</p>
+      </div>
+      <div class="py-7 px-4 text-center reveal" style="transition-delay:.65s;">
+        <p class="font-display text-cream font-bold" style="font-size: clamp(1.5rem,4vw,2.2rem);">144</p>
+        <p class="section-label mt-1" style="font-size:0.58rem;">Avis clients</p>
+      </div>
+      <div class="py-7 px-4 text-center reveal" style="transition-delay:.7s;">
+        <p class="font-display text-cream font-bold" style="font-size: clamp(1.5rem,4vw,2.2rem);">12–23</p>
+        <p class="section-label mt-1" style="font-size:0.58rem;">Tous les jours</p>
+      </div>
+    </div>
+  </div>
+
   <!-- Scroll cue -->
-  <div class="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 opacity-50">
-    <span class="font-body text-cream text-[0.6rem] tracking-[0.3em] uppercase">Défiler</span>
-    <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true" class="animate-bounce">
-      <path d="M3 6l6 6 6-6" stroke="#F7F1E4" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-    </svg>
+  <div class="absolute bottom-6 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2.5 hidden sm:flex">
+    <span class="font-body text-cream text-[0.58rem] tracking-[0.35em] uppercase opacity-40">Défiler</span>
+    <div class="scroll-line opacity-40"></div>
   </div>
 
   <!-- Wave at bottom -->
-  <div class="absolute bottom-0 left-0 right-0 wave-cream" aria-hidden="true">
-    <svg viewBox="0 0 1440 64" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg" width="100%" height="64">
-      <path d="M0,32 C240,64 480,0 720,32 C960,64 1200,0 1440,32 L1440,64 L0,64 Z" fill="#F7F1E4"/>
+  <div class="absolute bottom-0 left-0 right-0 wave" aria-hidden="true">
+    <svg viewBox="0 0 1440 72" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg" width="100%" height="72">
+      <path d="M0,36 C240,72 480,0 720,36 C960,72 1200,0 1440,36 L1440,72 L0,72 Z" fill="#F7F1E4"/>
     </svg>
   </div>
 </section>
@@ -301,169 +600,198 @@
 <!-- ════════════════════════════════════════════
      CONCEPT STRIP
 ════════════════════════════════════════════ -->
-<section class="py-20 md:py-28 px-6 bg-cream">
+<section class="py-20 sm:py-28 px-5 sm:px-8 bg-cream">
   <div class="max-w-3xl mx-auto text-center reveal">
     <p class="section-label mb-5">Notre concept</p>
-    <h2 class="font-display text-burg font-bold gold-rule"
-        style="font-size: clamp(2.2rem, 5vw, 3.5rem); line-height: 1.1;">
+    <h2 class="font-display text-burg font-bold"
+        style="font-size: clamp(2rem, 5.5vw, 3.6rem); line-height: 1.08; letter-spacing:-0.01em;">
       L&rsquo;art de la pasta,<br/>réinventé &agrave; Sousse
     </h2>
-    <p class="font-body text-burg/65 leading-relaxed mt-10 max-w-2xl mx-auto"
-       style="font-size: clamp(1rem, 1.4vw, 1.1rem);">
+    <span class="gold-line"></span>
+    <p class="font-body text-burg/60 leading-relaxed mt-10 max-w-2xl mx-auto"
+       style="font-size: clamp(0.95rem, 1.4vw, 1.08rem);">
       Chez PASTAGRAM, chaque assiette est une invitation au voyage. Pâtes fraîches façonnées à la main, sauces longuement mijotées et ingrédients soigneusement sélectionnés — une cuisine italienne sincère dans un cadre chaleureux au cœur de Khzema Ouest.
     </p>
   </div>
 
   <!-- Three pillars -->
-  <div class="max-w-5xl mx-auto mt-16 grid grid-cols-1 md:grid-cols-3 gap-8">
-    <div class="text-center reveal" style="transition-delay:.1s">
-      <div class="w-14 h-14 rounded-full bg-burg/8 flex items-center justify-center mx-auto mb-4">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#C4993E" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+  <div class="max-w-5xl mx-auto mt-14 grid grid-cols-1 sm:grid-cols-3 gap-5 sm:gap-6">
+    <div class="pillar-card reveal" style="transition-delay:.1s; background: linear-gradient(135deg, rgba(39,8,9,0.07) 0%, rgba(196,153,62,0.04) 100%);">
+      <div class="w-14 h-14 rounded-2xl flex items-center justify-center mx-auto mb-5" style="background: linear-gradient(135deg, rgba(39,8,9,0.08), rgba(196,153,62,0.06)); border: 1px solid rgba(196,153,62,0.18);">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#C4993E" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
           <path d="M12 2a10 10 0 100 20A10 10 0 0012 2z"/>
           <path d="M12 6v6l4 2"/>
         </svg>
       </div>
-      <h3 class="font-display text-burg text-xl font-semibold mb-2">Frais &bull; Fait maison</h3>
-      <p class="font-body text-burg/55 text-sm leading-relaxed">Pâtes pétries et façonnées chaque jour, aucun compromis sur la qualité.</p>
+      <h3 class="font-display text-burg text-xl font-semibold mb-2 text-center">Frais &bull; Fait maison</h3>
+      <p class="font-body text-burg/55 text-sm leading-relaxed text-center">Pâtes pétries et façonnées chaque jour, aucun compromis sur la qualité.</p>
     </div>
-    <div class="text-center reveal" style="transition-delay:.2s">
-      <div class="w-14 h-14 rounded-full bg-burg/8 flex items-center justify-center mx-auto mb-4">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#C4993E" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+    <div class="pillar-card reveal" style="transition-delay:.2s; background: linear-gradient(135deg, rgba(39,8,9,0.07) 0%, rgba(196,153,62,0.04) 100%);">
+      <div class="w-14 h-14 rounded-2xl flex items-center justify-center mx-auto mb-5" style="background: linear-gradient(135deg, rgba(39,8,9,0.08), rgba(196,153,62,0.06)); border: 1px solid rgba(196,153,62,0.18);">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#C4993E" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
           <path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/>
         </svg>
       </div>
-      <h3 class="font-display text-burg text-xl font-semibold mb-2">Cuisin&eacute; avec passion</h3>
-      <p class="font-body text-burg/55 text-sm leading-relaxed">Des recettes élaborées avec amour, inspirées des trattorie italiennes.</p>
+      <h3 class="font-display text-burg text-xl font-semibold mb-2 text-center">Cuisin&eacute; avec passion</h3>
+      <p class="font-body text-burg/55 text-sm leading-relaxed text-center">Des recettes élaborées avec amour, inspirées des trattorie italiennes.</p>
     </div>
-    <div class="text-center reveal" style="transition-delay:.3s">
-      <div class="w-14 h-14 rounded-full bg-burg/8 flex items-center justify-center mx-auto mb-4">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#C4993E" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+    <div class="pillar-card reveal" style="transition-delay:.3s; background: linear-gradient(135deg, rgba(39,8,9,0.07) 0%, rgba(196,153,62,0.04) 100%);">
+      <div class="w-14 h-14 rounded-2xl flex items-center justify-center mx-auto mb-5" style="background: linear-gradient(135deg, rgba(39,8,9,0.08), rgba(196,153,62,0.06)); border: 1px solid rgba(196,153,62,0.18);">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#C4993E" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
           <circle cx="12" cy="12" r="10"/>
           <path d="M8.56 2.75c4.37 6.03 6.02 9.42 8.03 17.72m2.54-15.38c-3.72 4.35-8.94 5.66-16.88 5.85m19.5 1.9c-3.5-.93-6.63-.82-8.94 0-2.58.92-5.01 2.86-7.44 6.32"/>
         </svg>
       </div>
-      <h3 class="font-display text-burg text-xl font-semibold mb-2">Ouvert tous les jours</h3>
-      <p class="font-body text-burg/55 text-sm leading-relaxed">De 12h à 23h — que ce soit pour un déjeuner tranquille ou un dîner en famille.</p>
+      <h3 class="font-display text-burg text-xl font-semibold mb-2 text-center">Ouvert tous les jours</h3>
+      <p class="font-body text-burg/55 text-sm leading-relaxed text-center">De 12h à 23h — que ce soit pour un déjeuner tranquille ou un dîner en famille.</p>
     </div>
   </div>
 </section>
 
 
 <!-- ════════════════════════════════════════════
-     NOS PASTA (Services)
+     NOS PASTA
 ════════════════════════════════════════════ -->
-<section id="nos-pasta" class="relative py-24 md:py-32 px-6 bg-burg overflow-hidden">
+<section id="nos-pasta" class="relative py-24 sm:py-32 px-5 sm:px-8 overflow-hidden"
+         style="background: linear-gradient(180deg, #270809 0%, #1a0405 100%);">
 
-  <!-- Subtle background pattern -->
-  <div class="absolute inset-0 opacity-5 pointer-events-none" aria-hidden="true"
-       style="background-image: radial-gradient(circle, #C4993E 1px, transparent 1px); background-size: 36px 36px;"></div>
+  <!-- Radial glow accents -->
+  <div class="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-3xl h-96 opacity-20 pointer-events-none" aria-hidden="true"
+       style="background: radial-gradient(ellipse at center top, rgba(196,153,62,0.4) 0%, transparent 70%);"></div>
+  <div class="absolute bottom-0 right-0 w-96 h-96 opacity-10 pointer-events-none" aria-hidden="true"
+       style="background: radial-gradient(circle, rgba(192,74,40,0.6) 0%, transparent 70%);"></div>
+
+  <!-- Subtle dot texture -->
+  <div class="absolute inset-0 opacity-[0.03] pointer-events-none" aria-hidden="true"
+       style="background-image: radial-gradient(circle, #C4993E 1px, transparent 1px); background-size: 32px 32px;"></div>
 
   <!-- Wave top -->
-  <div class="absolute top-0 left-0 right-0 wave-cream" aria-hidden="true" style="transform: rotate(180deg) scaleX(-1);">
-    <svg viewBox="0 0 1440 60" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg" width="100%" height="60">
-      <path d="M0,30 C360,60 720,0 1080,30 C1260,45 1380,20 1440,30 L1440,60 L0,60 Z" fill="#F7F1E4"/>
+  <div class="absolute top-0 left-0 right-0 wave" aria-hidden="true" style="transform: rotate(180deg) scaleX(-1);">
+    <svg viewBox="0 0 1440 64" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg" width="100%" height="64">
+      <path d="M0,32 C360,64 720,0 1080,32 C1260,48 1380,22 1440,32 L1440,64 L0,64 Z" fill="#F7F1E4"/>
     </svg>
   </div>
 
   <div class="max-w-7xl mx-auto relative z-10">
 
-    <div class="text-center mb-16 reveal">
+    <!-- Header -->
+    <div class="text-center mb-14 sm:mb-20 reveal">
       <p class="section-label mb-5">Notre sélection</p>
-      <h2 class="font-display text-cream font-bold gold-rule"
-          style="font-size: clamp(2.2rem, 5vw, 3.5rem);">
+      <h2 class="font-display text-cream font-bold"
+          style="font-size: clamp(2.2rem, 6vw, 3.8rem); letter-spacing: -0.01em;">
         Nos Pastas
       </h2>
-      <p class="font-body text-cream/55 mt-10 text-sm max-w-md mx-auto leading-relaxed">
+      <span class="gold-line" style="margin: 18px auto 0;"></span>
+      <p class="font-body text-cream/50 mt-8 text-sm max-w-md mx-auto leading-relaxed">
         De la classique Carbonara aux créations méditerranéennes — des saveurs pour tous les palais.
       </p>
     </div>
 
-    <!-- Cards grid -->
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    <!-- Cards grid — mobile: 1 col, tablet: 2 col, desktop: 3 col -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6">
 
-      <!-- 1 -->
-      <article class="pasta-card bg-burg-mid rounded-2xl overflow-hidden reveal" style="transition-delay:.05s">
-        <div class="h-52 overflow-hidden">
-          <img src="https://images.unsplash.com/photo-1551183053-bf91798d2e8?w=700&q=80&auto=format&fit=crop"
-               alt="Tagliatelle Bolognaise" class="w-full h-full object-cover" />
+      <!-- 1 — Tagliatelle Bolognaise -->
+      <article class="pasta-card reveal" style="transition-delay:.05s">
+        <div class="card-img">
+          <span class="card-badge badge-gold">Signature</span>
+          <img
+            src="https://images.unsplash.com/photo-1551183053-bf91798d2e8?w=800&q=85&auto=format&fit=crop"
+            alt="Tagliatelle Bolognaise — PASTAGRAM Sousse"
+            loading="lazy"
+          />
         </div>
-        <div class="p-6">
-          <span class="font-body text-gold text-[0.6rem] tracking-[0.25em] uppercase">Signature</span>
-          <h3 class="font-display text-cream text-2xl font-semibold mt-1 mb-2">Tagliatelle Bolognaise</h3>
-          <p class="font-body text-cream/55 text-sm leading-relaxed">Viande de bœuf mijotée lentement avec tomates fraîches, herbes du jardin et vin rouge. Le grand classique dans sa version la plus authentique.</p>
+        <div class="card-body">
+          <h3 class="card-title">Tagliatelle Bolognaise</h3>
+          <p class="card-desc">Viande de bœuf mijotée lentement avec tomates fraîches, herbes du jardin et vin rouge. Le grand classique dans sa version la plus authentique.</p>
         </div>
       </article>
 
-      <!-- 2 -->
-      <article class="pasta-card bg-burg-mid rounded-2xl overflow-hidden reveal" style="transition-delay:.1s">
-        <div class="h-52 overflow-hidden">
-          <img src="https://images.unsplash.com/photo-1473093295043-cdd812d0e601?w=700&q=80&auto=format&fit=crop"
-               alt="Spaghetti Carbonara" class="w-full h-full object-cover" />
+      <!-- 2 — Spaghetti Carbonara -->
+      <article class="pasta-card reveal" style="transition-delay:.1s">
+        <div class="card-img">
+          <span class="card-badge badge-gold">Populaire</span>
+          <img
+            src="https://images.unsplash.com/photo-1473093295043-cdd812d0e601?w=800&q=85&auto=format&fit=crop"
+            alt="Spaghetti Carbonara — PASTAGRAM Sousse"
+            loading="lazy"
+          />
         </div>
-        <div class="p-6">
-          <span class="font-body text-gold text-[0.6rem] tracking-[0.25em] uppercase">Populaire</span>
-          <h3 class="font-display text-cream text-2xl font-semibold mt-1 mb-2">Spaghetti Carbonara</h3>
-          <p class="font-body text-cream/55 text-sm leading-relaxed">Crème onctueuse, lardons dorés, parmesan affiné et œuf frais — la recette romaine dans toute sa splendeur crémeuse.</p>
-        </div>
-      </article>
-
-      <!-- 3 -->
-      <article class="pasta-card bg-burg-mid rounded-2xl overflow-hidden reveal" style="transition-delay:.15s">
-        <div class="h-52 overflow-hidden">
-          <img src="https://images.unsplash.com/photo-1563379926898-05f4575a45d8?w=700&q=80&auto=format&fit=crop"
-               alt="Pasta aux Fruits de Mer" class="w-full h-full object-cover" />
-        </div>
-        <div class="p-6">
-          <span class="font-body text-gold text-[0.6rem] tracking-[0.25em] uppercase">Coup de cœur</span>
-          <h3 class="font-display text-cream text-2xl font-semibold mt-1 mb-2">Pasta Fruits de Mer</h3>
-          <p class="font-body text-cream/55 text-sm leading-relaxed">Crevettes, calamars et moules dans une sauce tomate légère parfumée au basilic frais et zeste de citron.</p>
+        <div class="card-body">
+          <h3 class="card-title">Spaghetti Carbonara</h3>
+          <p class="card-desc">Crème onctueuse, lardons dorés, parmesan affiné et œuf frais — la recette romaine dans toute sa splendeur crémeuse.</p>
         </div>
       </article>
 
-      <!-- 4 -->
-      <article class="pasta-card bg-burg-mid rounded-2xl overflow-hidden reveal" style="transition-delay:.2s">
-        <div class="h-52 overflow-hidden">
-          <img src="https://images.unsplash.com/photo-1574894709920-11b28be6d622?w=700&q=80&auto=format&fit=crop"
-               alt="Penne Arrabiata" class="w-full h-full object-cover" />
+      <!-- 3 — Pasta Fruits de Mer -->
+      <article class="pasta-card reveal" style="transition-delay:.15s">
+        <div class="card-img">
+          <span class="card-badge badge-gold">Coup de cœur</span>
+          <img
+            src="https://images.unsplash.com/photo-1563379926898-05f4575a45d8?w=800&q=85&auto=format&fit=crop"
+            alt="Pasta Fruits de Mer — PASTAGRAM Sousse"
+            loading="lazy"
+          />
         </div>
-        <div class="p-6">
-          <span class="font-body text-terra-lt text-[0.6rem] tracking-[0.25em] uppercase">Épicé</span>
-          <h3 class="font-display text-cream text-2xl font-semibold mt-1 mb-2">Penne Arrabiata</h3>
-          <p class="font-body text-cream/55 text-sm leading-relaxed">Sauce tomate relevée, ail doré, piment calabrese et persil frais — pour les amateurs de caractère et de piquant.</p>
-        </div>
-      </article>
-
-      <!-- 5 -->
-      <article class="pasta-card bg-burg-mid rounded-2xl overflow-hidden reveal" style="transition-delay:.25s">
-        <div class="h-52 overflow-hidden">
-          <img src="https://images.unsplash.com/photo-1621996346565-e3dbc646d9a9?w=700&q=80&auto=format&fit=crop"
-               alt="Pasta Végétarienne" class="w-full h-full object-cover" />
-        </div>
-        <div class="p-6">
-          <span class="font-body text-gold text-[0.6rem] tracking-[0.25em] uppercase">Végétarien</span>
-          <h3 class="font-display text-cream text-2xl font-semibold mt-1 mb-2">Pasta Végétarienne</h3>
-          <p class="font-body text-cream/55 text-sm leading-relaxed">Légumes de saison grillés, pesto basilic maison, parmesan râpé et roquette fraîche — généreuse et légère à la fois.</p>
+        <div class="card-body">
+          <h3 class="card-title">Pasta Fruits de Mer</h3>
+          <p class="card-desc">Crevettes, calamars et moules dans une sauce tomate légère parfumée au basilic frais et zeste de citron.</p>
         </div>
       </article>
 
-      <!-- 6 -->
-      <article class="pasta-card bg-burg-mid rounded-2xl overflow-hidden reveal" style="transition-delay:.3s">
-        <div class="h-52 overflow-hidden">
-          <img src="https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=700&q=80&auto=format&fit=crop"
-               alt="Lasagne Maison" class="w-full h-full object-cover" />
+      <!-- 4 — Penne Arrabiata -->
+      <article class="pasta-card reveal" style="transition-delay:.2s">
+        <div class="card-img">
+          <span class="card-badge badge-terra">Épicé</span>
+          <img
+            src="https://images.unsplash.com/photo-1574894709920-11b28be6d622?w=800&q=85&auto=format&fit=crop"
+            alt="Penne Arrabiata — PASTAGRAM Sousse"
+            loading="lazy"
+          />
         </div>
-        <div class="p-6">
-          <span class="font-body text-gold text-[0.6rem] tracking-[0.25em] uppercase">Fait maison</span>
-          <h3 class="font-display text-cream text-2xl font-semibold mt-1 mb-2">Lasagne Maison</h3>
-          <p class="font-body text-cream/55 text-sm leading-relaxed">Couches généreuses de pâtes fraîches, béchamel veloutée, bolognaise maison et gratin doré au four — réconfort absolu.</p>
+        <div class="card-body">
+          <h3 class="card-title">Penne Arrabiata</h3>
+          <p class="card-desc">Sauce tomate relevée, ail doré, piment calabrese et persil frais — pour les amateurs de caractère et de piquant.</p>
+        </div>
+      </article>
+
+      <!-- 5 — Pasta Végétarienne -->
+      <article class="pasta-card reveal" style="transition-delay:.25s">
+        <div class="card-img">
+          <span class="card-badge badge-green">Végétarien</span>
+          <img
+            src="https://images.unsplash.com/photo-1621996346565-e3dbc646d9a9?w=800&q=85&auto=format&fit=crop"
+            alt="Pasta Végétarienne — PASTAGRAM Sousse"
+            loading="lazy"
+          />
+        </div>
+        <div class="card-body">
+          <h3 class="card-title">Pasta Végétarienne</h3>
+          <p class="card-desc">Légumes de saison grillés, pesto basilic maison, parmesan râpé et roquette fraîche — généreuse et légère à la fois.</p>
+        </div>
+      </article>
+
+      <!-- 6 — Lasagne Maison -->
+      <article class="pasta-card reveal" style="transition-delay:.3s">
+        <div class="card-img">
+          <span class="card-badge badge-gold">Fait maison</span>
+          <img
+            src="https://images.unsplash.com/photo-1614777735435-d0570f3c3f6e?w=800&q=85&auto=format&fit=crop"
+            alt="Lasagne Maison — PASTAGRAM Sousse"
+            loading="lazy"
+          />
+        </div>
+        <div class="card-body">
+          <h3 class="card-title">Lasagne Maison</h3>
+          <p class="card-desc">Couches généreuses de pâtes fraîches, béchamel veloutée, bolognaise maison et gratin doré au four — réconfort absolu.</p>
         </div>
       </article>
 
     </div><!-- /grid -->
 
-    <div class="text-center mt-14 reveal">
-      <a href="tel:+21694810110"
-         class="inline-block bg-terra hover:bg-terra-lt text-cream font-body font-medium text-sm tracking-[0.15em] uppercase px-12 py-4 rounded-full transition-all duration-200 hover:scale-105 shadow-lg">
+    <!-- CTA -->
+    <div class="text-center mt-14 sm:mt-16 reveal">
+      <a href="tel:+21694810110" class="btn-primary">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 11.5a19.79 19.79 0 01-3.07-8.72A2 2 0 012.18 1h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.91 8.15a16 16 0 006 6l.62-.62a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
         Commander par téléphone
       </a>
     </div>
@@ -471,9 +799,9 @@
   </div>
 
   <!-- Wave bottom -->
-  <div class="absolute bottom-0 left-0 right-0 wave-cream" aria-hidden="true">
-    <svg viewBox="0 0 1440 60" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg" width="100%" height="60">
-      <path d="M0,30 C360,60 720,0 1080,30 C1260,45 1380,20 1440,30 L1440,60 L0,60 Z" fill="#F7F1E4"/>
+  <div class="absolute bottom-0 left-0 right-0 wave" aria-hidden="true">
+    <svg viewBox="0 0 1440 64" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg" width="100%" height="64">
+      <path d="M0,32 C360,64 720,0 1080,32 C1260,48 1380,22 1440,32 L1440,64 L0,64 Z" fill="#F7F1E4"/>
     </svg>
   </div>
 </section>
@@ -482,41 +810,54 @@
 <!-- ════════════════════════════════════════════
      GALLERY
 ════════════════════════════════════════════ -->
-<section id="galerie" class="py-24 md:py-32 px-6 bg-cream">
+<section id="galerie" class="py-20 sm:py-28 px-5 sm:px-8 bg-cream">
   <div class="max-w-7xl mx-auto">
 
-    <div class="text-center mb-14 reveal">
+    <div class="text-center mb-12 sm:mb-16 reveal">
       <p class="section-label mb-5">En images</p>
-      <h2 class="font-display text-burg font-bold gold-rule"
-          style="font-size: clamp(2.2rem, 5vw, 3.5rem);">
+      <h2 class="font-display text-burg font-bold"
+          style="font-size: clamp(2.2rem, 5.5vw, 3.6rem); letter-spacing:-0.01em;">
         La Galerie
       </h2>
+      <span class="gold-line" style="background: linear-gradient(90deg, #C4993E, #D4AF58); margin: 18px auto 0;"></span>
     </div>
 
     <div class="gallery-grid reveal">
-      <!-- Featured: business photo from Google -->
+      <!-- Featured: real restaurant photo from Google -->
       <div class="g-feat">
         <img
           src="https://lh3.googleusercontent.com/gps-cs-s/APNQkAHYy7tzwPpuRCKTfCqbmILHBqOBh_AkxqMUVWT1lnNWsqzit53MSAN2diuFGMQYG9FgiyMgvi3OAlunnJ6-p1bf0awvphB8i2wz79xZlqwCAKK-poZwBmVMKwqI2lM7o6vob6kHb9-PiQoF=w1000-h1000-c-n"
-          alt="Plat PASTAGRAM — spécialité maison"
+          alt="Plat PASTAGRAM — spécialité maison, Sousse"
+          loading="lazy"
         />
       </div>
-      <!-- Unsplash fills -->
       <div>
-        <img src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=700&q=80&auto=format&fit=crop"
-             alt="Pâtes fraîches" />
+        <img
+          src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=700&q=80&auto=format&fit=crop"
+          alt="Pâtes fraîches PASTAGRAM"
+          loading="lazy"
+        />
       </div>
       <div>
-        <img src="https://images.unsplash.com/photo-1481349518771-20055b2a7b24?w=700&q=80&auto=format&fit=crop"
-             alt="Ingrédients frais" />
+        <img
+          src="https://images.unsplash.com/photo-1481349518771-20055b2a7b24?w=700&q=80&auto=format&fit=crop"
+          alt="Ingrédients frais PASTAGRAM"
+          loading="lazy"
+        />
       </div>
       <div>
-        <img src="https://images.unsplash.com/photo-1559339352-11d035aa65de?w=700&q=80&auto=format&fit=crop"
-             alt="Pasta préparation" />
+        <img
+          src="https://images.unsplash.com/photo-1559339352-11d035aa65de?w=700&q=80&auto=format&fit=crop"
+          alt="Préparation pasta PASTAGRAM"
+          loading="lazy"
+        />
       </div>
       <div>
-        <img src="https://images.unsplash.com/photo-1551504734-5ee1c4a1479b?w=700&q=80&auto=format&fit=crop"
-             alt="Spaghetti maison" />
+        <img
+          src="https://images.unsplash.com/photo-1551504734-5ee1c4a1479b?w=700&q=80&auto=format&fit=crop"
+          alt="Spaghetti maison PASTAGRAM"
+          loading="lazy"
+        />
       </div>
     </div>
 
@@ -527,53 +868,71 @@
 <!-- ════════════════════════════════════════════
      CONTACT
 ════════════════════════════════════════════ -->
-<section id="contact" class="relative py-24 md:py-32 px-6 bg-burg overflow-hidden">
+<section id="contact" class="relative py-24 sm:py-32 px-5 sm:px-8 overflow-hidden"
+         style="background: linear-gradient(180deg, #270809 0%, #1a0405 100%);">
+
+  <!-- Glow -->
+  <div class="absolute inset-0 opacity-10 pointer-events-none" aria-hidden="true"
+       style="background: radial-gradient(ellipse at 30% 50%, rgba(196,153,62,0.5) 0%, transparent 60%);"></div>
 
   <!-- Wave top -->
-  <div class="absolute top-0 left-0 right-0" aria-hidden="true" style="transform: rotate(180deg) scaleX(-1);">
-    <svg viewBox="0 0 1440 60" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg" width="100%" height="60">
-      <path d="M0,30 C360,60 720,0 1080,30 C1260,45 1380,20 1440,30 L1440,60 L0,60 Z" fill="#F7F1E4"/>
+  <div class="absolute top-0 left-0 right-0 wave" aria-hidden="true" style="transform: rotate(180deg) scaleX(-1);">
+    <svg viewBox="0 0 1440 64" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg" width="100%" height="64">
+      <path d="M0,32 C360,64 720,0 1080,32 C1260,48 1380,22 1440,32 L1440,64 L0,64 Z" fill="#F7F1E4"/>
     </svg>
   </div>
 
   <div class="max-w-7xl mx-auto relative z-10">
 
-    <div class="text-center mb-16 reveal">
+    <!-- Section header -->
+    <div class="text-center mb-14 sm:mb-20 reveal">
       <p class="section-label mb-5">Nous trouver</p>
-      <h2 class="font-display text-cream font-bold gold-rule"
-          style="font-size: clamp(2.2rem, 5vw, 3.5rem);">
+      <h2 class="font-display text-cream font-bold"
+          style="font-size: clamp(2.2rem, 5.5vw, 3.6rem); letter-spacing:-0.01em;">
         Contact &amp; Acc&egrave;s
       </h2>
+      <span class="gold-line" style="margin: 18px auto 0;"></span>
     </div>
 
-    <div class="grid grid-cols-1 lg:grid-cols-5 gap-10 lg:gap-14">
+    <!-- Grid: info (left) + map (right) -->
+    <div class="grid grid-cols-1 lg:grid-cols-5 gap-8 sm:gap-12 lg:gap-16">
 
-      <!-- Left info column -->
-      <div class="lg:col-span-2 space-y-8">
+      <!-- ── Left: info column ── -->
+      <div class="lg:col-span-2 flex flex-col gap-7">
 
         <!-- Address -->
-        <div class="flex gap-5 reveal-x" style="transition-delay:.05s">
-          <div class="w-11 h-11 rounded-full flex items-center justify-center flex-shrink-0"
-               style="background: rgba(196,153,62,0.15);">
+        <div class="flex gap-5 items-start reveal-x" style="transition-delay:.05s">
+          <div class="w-12 h-12 rounded-2xl flex-shrink-0 flex items-center justify-center"
+               style="background: linear-gradient(135deg, rgba(196,153,62,0.18), rgba(196,153,62,0.08)); border: 1px solid rgba(196,153,62,0.2);">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#C4993E" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
               <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/>
               <circle cx="12" cy="10" r="3"/>
             </svg>
           </div>
           <div>
-            <p class="section-label mb-1.5">Adresse</p>
+            <p class="section-label mb-2">Adresse</p>
             <address class="font-body text-cream not-italic leading-relaxed text-sm">
               Rue Hssan Ben Said<br/>
               Khzema Ouest, Sousse 4071<br/>
               Tunisie
             </address>
+            <a href="https://maps.google.com/?cid=4129680296869486654"
+               target="_blank"
+               rel="noopener noreferrer"
+               class="inline-flex items-center gap-1.5 font-body text-gold text-xs mt-2.5 hover:text-gold-lt transition-colors">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+              Ouvrir dans Google Maps
+            </a>
           </div>
         </div>
 
+        <!-- Divider -->
+        <div style="height:1px; background: linear-gradient(to right, rgba(196,153,62,0.2), transparent);"></div>
+
         <!-- Phone -->
-        <div class="flex gap-5 reveal-x" style="transition-delay:.1s">
-          <div class="w-11 h-11 rounded-full flex items-center justify-center flex-shrink-0"
-               style="background: rgba(196,153,62,0.15);">
+        <div class="flex gap-5 items-center reveal-x" style="transition-delay:.1s">
+          <div class="w-12 h-12 rounded-2xl flex-shrink-0 flex items-center justify-center"
+               style="background: linear-gradient(135deg, rgba(196,153,62,0.18), rgba(196,153,62,0.08)); border: 1px solid rgba(196,153,62,0.2);">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#C4993E" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
               <path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 11.5a19.79 19.79 0 01-3.07-8.72A2 2 0 012.18 1h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.91 8.15a16 16 0 006 6l.62-.62a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/>
             </svg>
@@ -581,17 +940,20 @@
           <div>
             <p class="section-label mb-1.5">Téléphone</p>
             <a href="tel:+21694810110"
-               class="font-body text-cream text-lg hover:text-gold transition-colors duration-200">
+               class="font-body text-cream text-xl font-medium hover:text-gold transition-colors duration-200">
               +216 94 810 110
             </a>
           </div>
         </div>
 
+        <!-- Divider -->
+        <div style="height:1px; background: linear-gradient(to right, rgba(196,153,62,0.2), transparent);"></div>
+
         <!-- Hours -->
         <div class="reveal-x" style="transition-delay:.15s">
-          <div class="flex gap-5 mb-4">
-            <div class="w-11 h-11 rounded-full flex items-center justify-center flex-shrink-0"
-                 style="background: rgba(196,153,62,0.15);">
+          <div class="flex gap-5 items-center mb-4">
+            <div class="w-12 h-12 rounded-2xl flex-shrink-0 flex items-center justify-center"
+                 style="background: linear-gradient(135deg, rgba(196,153,62,0.18), rgba(196,153,62,0.08)); border: 1px solid rgba(196,153,62,0.2);">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#C4993E" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                 <circle cx="12" cy="12" r="10"/>
                 <polyline points="12 6 12 12 16 14"/>
@@ -599,62 +961,74 @@
             </div>
             <div>
               <p class="section-label mb-1">Horaires</p>
-              <p class="font-body text-cream text-sm">Tous les jours</p>
+              <p class="font-body text-cream text-sm">Ouvert tous les jours</p>
             </div>
           </div>
-          <div class="ml-16 border border-white/10 rounded-xl overflow-hidden">
-            <div class="hours-row px-4">
-              <span class="font-body text-cream/60 text-sm">Lundi – Jeudi</span>
-              <span class="font-body text-gold font-medium text-sm">12:00 – 23:00</span>
+          <div class="rounded-2xl overflow-hidden border border-white/8" style="background: rgba(255,255,255,0.03);">
+            <div class="hours-row">
+              <span class="font-body text-cream/55 text-sm">Lundi – Jeudi</span>
+              <span class="font-body text-gold font-semibold text-sm">12:00 – 23:00</span>
             </div>
-            <div class="hours-row px-4">
-              <span class="font-body text-cream/60 text-sm">Vendredi</span>
-              <span class="font-body text-gold font-medium text-sm">12:00 – 23:00</span>
+            <div class="hours-row">
+              <span class="font-body text-cream/55 text-sm">Vendredi</span>
+              <span class="font-body text-gold font-semibold text-sm">12:00 – 23:00</span>
             </div>
-            <div class="hours-row px-4">
-              <span class="font-body text-cream/60 text-sm">Samedi – Dimanche</span>
-              <span class="font-body text-gold font-medium text-sm">12:00 – 23:00</span>
+            <div class="hours-row">
+              <span class="font-body text-cream/55 text-sm">Samedi – Dimanche</span>
+              <span class="font-body text-gold font-semibold text-sm">12:00 – 23:00</span>
             </div>
           </div>
         </div>
 
-        <!-- Rating block -->
-        <div class="ml-0 reveal-x" style="transition-delay:.2s">
-          <div class="inline-flex items-center gap-4 bg-burg-mid border border-white/8 rounded-2xl px-6 py-5">
-            <span class="font-display text-cream font-bold" style="font-size:3rem; line-height:1;">4,8</span>
+        <!-- Rating -->
+        <div class="reveal-x" style="transition-delay:.2s">
+          <div class="inline-flex items-center gap-5 rounded-2xl px-6 py-5 border border-white/10"
+               style="background: linear-gradient(135deg, rgba(74,16,24,0.6), rgba(26,4,5,0.4));">
             <div>
-              <div class="stars text-lg mb-1">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
-              <p class="font-body text-cream/50 text-xs">144 avis Google</p>
+              <p class="font-display text-cream font-bold" style="font-size:3rem; line-height:1; letter-spacing:-0.02em;">4,8</p>
+              <div class="stars text-base mt-1">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+            </div>
+            <div style="width:1px; height:48px; background: rgba(196,153,62,0.2);"></div>
+            <div>
+              <p class="font-body text-cream text-sm font-medium">144 avis</p>
+              <p class="font-body text-cream/40 text-xs mt-0.5">sur Google Maps</p>
             </div>
           </div>
         </div>
 
-        <!-- CTA -->
-        <div class="reveal-x" style="transition-delay:.25s">
-          <a href="tel:+21694810110"
-             class="inline-flex items-center gap-3 bg-terra hover:bg-terra-lt text-cream font-body font-medium text-sm tracking-[0.1em] uppercase px-8 py-3.5 rounded-full transition-all duration-200 hover:scale-105">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-              <path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 11.5a19.79 19.79 0 01-3.07-8.72A2 2 0 012.18 1h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.91 8.15a16 16 0 006 6l.62-.62a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/>
-            </svg>
-            Appeler maintenant
+        <!-- CTA buttons -->
+        <div class="flex flex-col sm:flex-row gap-3 reveal-x" style="transition-delay:.25s">
+          <a href="tel:+21694810110" class="btn-primary" style="flex:1; justify-content:center;">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 11.5a19.79 19.79 0 01-3.07-8.72A2 2 0 012.18 1h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.91 8.15a16 16 0 006 6l.62-.62a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
+            Appeler
+          </a>
+          <a href="https://wa.me/21694810110" target="_blank" rel="noopener noreferrer"
+             class="btn-outline" style="flex:1; justify-content:center; border-color:rgba(37,211,102,0.35); color:#7ee88a;">
+            <svg width="15" height="15" viewBox="0 0 32 32" fill="currentColor" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M16 2C8.268 2 2 8.268 2 16c0 2.444.655 4.734 1.796 6.706L2 30l7.496-1.763A13.945 13.945 0 0016 30c7.732 0 14-6.268 14-14S23.732 2 16 2zm6.354 19.317c-.347-.173-2.054-.999-2.374-1.113-.32-.114-.553-.173-.785.174-.232.347-.899 1.112-1.102 1.345-.202.232-.405.26-.752.086-.347-.173-1.464-.52-2.788-1.654a10.29 10.29 0 01-1.83-2.509c-.202-.347-.022-.535.152-.707.157-.156.348-.405.521-.607.174-.203.232-.348.348-.58.116-.231.058-.434-.029-.607-.086-.173-.785-1.882-1.073-2.578-.289-.695-.578-.579-.785-.579h-.667c-.231 0-.607.087-.925.434-.318.347-1.217 1.16-1.217 2.84 0 1.68 1.246 3.302 1.42 3.534.174.231 2.433 3.794 5.965 5.232.833.347 1.483.554 1.99.709.836.26 1.597.223 2.199.135.671-.098 2.063-.82 2.352-1.615.29-.795.29-1.476.204-1.62-.087-.143-.319-.231-.666-.404z"/></svg>
+            WhatsApp
           </a>
         </div>
 
       </div><!-- /left -->
 
-      <!-- Map -->
-      <div class="lg:col-span-3 reveal-r" style="min-height:380px;">
-        <div class="rounded-2xl overflow-hidden shadow-2xl border border-white/8 h-full" style="min-height:380px;">
+      <!-- ── Map ── -->
+      <div class="lg:col-span-3 reveal-r" style="transition-delay:.1s; min-height:420px;">
+        <div class="map-wrapper h-full" style="min-height:420px;">
           <iframe
-            src="https://maps.google.com/maps?q=khzema+ouest+Rue+Hssan+Ben+Said+Sousse+4071+Tunisie&output=embed&z=16"
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3236.8451890823!2d10.6059718!3d35.8421546!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x12fd8bbf48a2586d%3A0x39230db5b7c9203e!2sPASTAGRAM-%20PASTA%20BAR-!5e0!3m2!1sfr!2stn!4v1717000000000!5m2!1sfr!2stn"
             width="100%"
             height="100%"
-            style="border:0; min-height:380px; display:block;"
+            style="border:0; min-height:420px; display:block; filter: saturate(0.85) contrast(1.05);"
             allowfullscreen=""
             loading="lazy"
             referrerpolicy="no-referrer-when-downgrade"
-            title="Localisation PASTAGRAM sur Google Maps"
+            title="Localisation PASTAGRAM Pasta Bar sur Google Maps — Khzema Ouest, Sousse 4071, Tunisie"
           ></iframe>
+        </div>
+        <!-- Address tag below map on mobile -->
+        <div class="mt-4 flex items-center gap-3 lg:hidden">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#C4993E" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          <p class="font-body text-cream/50 text-xs">Rue Hssan Ben Said, Khzema Ouest, Sousse 4071</p>
         </div>
       </div>
 
@@ -662,9 +1036,9 @@
   </div>
 
   <!-- Wave bottom -->
-  <div class="absolute bottom-0 left-0 right-0" aria-hidden="true">
-    <svg viewBox="0 0 1440 48" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg" width="100%" height="48">
-      <path d="M0,24 C480,48 960,0 1440,24 L1440,48 L0,48 Z" fill="#180404"/>
+  <div class="absolute bottom-0 left-0 right-0 wave" aria-hidden="true">
+    <svg viewBox="0 0 1440 52" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg" width="100%" height="52">
+      <path d="M0,26 C480,52 960,0 1440,26 L1440,52 L0,52 Z" fill="#180404"/>
     </svg>
   </div>
 </section>
@@ -673,25 +1047,65 @@
 <!-- ════════════════════════════════════════════
      FOOTER
 ════════════════════════════════════════════ -->
-<footer class="bg-ink py-12 px-6 text-center">
-  <a href="#hero">
-    <span class="font-display text-cream text-3xl font-bold tracking-[0.25em]">PASTAGRAM</span>
-  </a>
-  <p class="font-body text-cream/35 text-xs tracking-[0.25em] uppercase mt-2 mb-6">Pasta Bar &bull; Sousse, Tunisie</p>
+<footer class="bg-ink pt-14 pb-10 px-5 sm:px-8 text-center">
 
-  <div class="flex items-center justify-center gap-6 mb-8">
-    <a href="tel:+21694810110"
-       class="font-body text-cream/50 hover:text-gold text-sm transition-colors">
-      +216 94 810 110
-    </a>
-    <span class="text-cream/20">|</span>
-    <span class="font-body text-cream/50 text-sm">Khzema Ouest, Sousse</span>
-    <span class="text-cream/20">|</span>
-    <span class="font-body text-cream/50 text-sm">12h00 – 23h00</span>
+  <!-- Logo -->
+  <a href="#hero" class="inline-block">
+    <span class="font-display text-cream text-3xl sm:text-4xl font-bold tracking-[0.25em]">PASTAGRAM</span>
+  </a>
+  <p class="font-body text-cream/30 text-xs tracking-[0.28em] uppercase mt-2.5 mb-2">Pasta Bar</p>
+
+  <!-- Gold ornament -->
+  <div class="flex items-center justify-center gap-3 my-6" aria-hidden="true">
+    <div style="width:32px; height:1px; background: linear-gradient(to right, transparent, rgba(196,153,62,0.4));"></div>
+    <svg width="6" height="6" viewBox="0 0 6 6" fill="#C4993E" xmlns="http://www.w3.org/2000/svg"><circle cx="3" cy="3" r="3"/></svg>
+    <div style="width:48px; height:1px; background: rgba(196,153,62,0.35);"></div>
+    <svg width="4" height="4" viewBox="0 0 4 4" fill="#C4993E" xmlns="http://www.w3.org/2000/svg"><circle cx="2" cy="2" r="2"/></svg>
+    <div style="width:48px; height:1px; background: rgba(196,153,62,0.35);"></div>
+    <svg width="6" height="6" viewBox="0 0 6 6" fill="#C4993E" xmlns="http://www.w3.org/2000/svg"><circle cx="3" cy="3" r="3"/></svg>
+    <div style="width:32px; height:1px; background: linear-gradient(to left, transparent, rgba(196,153,62,0.4));"></div>
   </div>
 
-  <div class="w-24 h-px bg-white/10 mx-auto mb-6"></div>
-  <p class="font-body text-cream/25 text-xs">&copy; 2024 PASTAGRAM. Tous droits réservés.</p>
+  <!-- Footer links row -->
+  <div class="flex flex-wrap items-center justify-center gap-x-5 gap-y-2 mb-8">
+    <a href="tel:+21694810110" class="font-body text-cream/45 hover:text-gold text-sm transition-colors">
+      +216 94 810 110
+    </a>
+    <span class="text-cream/15 hidden sm:inline">|</span>
+    <span class="font-body text-cream/45 text-sm">Rue Hssan Ben Said, Khzema Ouest</span>
+    <span class="text-cream/15 hidden sm:inline">|</span>
+    <span class="font-body text-cream/45 text-sm">Sousse 4071, Tunisie</span>
+    <span class="text-cream/15 hidden sm:inline">|</span>
+    <span class="font-body text-cream/45 text-sm">12h00 – 23h00</span>
+  </div>
+
+  <!-- Social / actions -->
+  <div class="flex items-center justify-center gap-4 mb-8">
+    <a href="https://wa.me/21694810110" target="_blank" rel="noopener noreferrer"
+       class="w-10 h-10 rounded-full flex items-center justify-center transition-colors duration-200"
+       style="background: rgba(37,211,102,0.12); border: 1px solid rgba(37,211,102,0.25);"
+       onmouseover="this.style.background='rgba(37,211,102,0.22)'" onmouseout="this.style.background='rgba(37,211,102,0.12)'"
+       aria-label="WhatsApp PASTAGRAM">
+      <svg width="18" height="18" viewBox="0 0 32 32" fill="#25D366" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M16 2C8.268 2 2 8.268 2 16c0 2.444.655 4.734 1.796 6.706L2 30l7.496-1.763A13.945 13.945 0 0016 30c7.732 0 14-6.268 14-14S23.732 2 16 2zm6.354 19.317c-.347-.173-2.054-.999-2.374-1.113-.32-.114-.553-.173-.785.174-.232.347-.899 1.112-1.102 1.345-.202.232-.405.26-.752.086-.347-.173-1.464-.52-2.788-1.654a10.29 10.29 0 01-1.83-2.509c-.202-.347-.022-.535.152-.707.157-.156.348-.405.521-.607.174-.203.232-.348.348-.58.116-.231.058-.434-.029-.607-.086-.173-.785-1.882-1.073-2.578-.289-.695-.578-.579-.785-.579h-.667c-.231 0-.607.087-.925.434-.318.347-1.217 1.16-1.217 2.84 0 1.68 1.246 3.302 1.42 3.534.174.231 2.433 3.794 5.965 5.232.833.347 1.483.554 1.99.709.836.26 1.597.223 2.199.135.671-.098 2.063-.82 2.352-1.615.29-.795.29-1.476.204-1.62-.087-.143-.319-.231-.666-.404z"/></svg>
+    </a>
+    <a href="tel:+21694810110"
+       class="w-10 h-10 rounded-full flex items-center justify-center transition-colors duration-200"
+       style="background: rgba(196,153,62,0.1); border: 1px solid rgba(196,153,62,0.22);"
+       onmouseover="this.style.background='rgba(196,153,62,0.2)'" onmouseout="this.style.background='rgba(196,153,62,0.1)'"
+       aria-label="Téléphone PASTAGRAM">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#C4993E" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 11.5a19.79 19.79 0 01-3.07-8.72A2 2 0 012.18 1h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.91 8.15a16 16 0 006 6l.62-.62a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
+    </a>
+    <a href="https://maps.google.com/?cid=4129680296869486654" target="_blank" rel="noopener noreferrer"
+       class="w-10 h-10 rounded-full flex items-center justify-center transition-colors duration-200"
+       style="background: rgba(196,153,62,0.1); border: 1px solid rgba(196,153,62,0.22);"
+       onmouseover="this.style.background='rgba(196,153,62,0.2)'" onmouseout="this.style.background='rgba(196,153,62,0.1)'"
+       aria-label="Google Maps PASTAGRAM">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#C4993E" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+    </a>
+  </div>
+
+  <div style="width:60px; height:1px; background:rgba(255,255,255,0.07); margin:0 auto 16px;"></div>
+  <p class="font-body text-cream/20 text-xs">&copy; 2025 PASTAGRAM. Tous droits réservés.</p>
 </footer>
 
 
@@ -701,8 +1115,8 @@
 <a href="https://wa.me/21694810110"
    target="_blank"
    rel="noopener noreferrer"
-   class="wa-btn fixed bottom-6 right-6 z-50 w-14 h-14 rounded-full flex items-center justify-center shadow-xl hover:scale-110 transition-transform duration-200"
-   style="background:#25D366;"
+   class="wa-btn fixed bottom-6 right-5 sm:right-6 z-50 w-14 h-14 rounded-full flex items-center justify-center shadow-2xl hover:scale-110 transition-transform duration-200"
+   style="background: linear-gradient(135deg, #25D366, #1da851);"
    aria-label="Contacter PASTAGRAM sur WhatsApp">
   <svg width="28" height="28" viewBox="0 0 32 32" fill="white" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
     <path d="M16 2C8.268 2 2 8.268 2 16c0 2.444.655 4.734 1.796 6.706L2 30l7.496-1.763A13.945 13.945 0 0016 30c7.732 0 14-6.268 14-14S23.732 2 16 2zm0 25.6a11.56 11.56 0 01-5.88-1.598l-.42-.25-4.448 1.048 1.066-4.315-.275-.445A11.555 11.555 0 014.4 16C4.4 9.595 9.595 4.4 16 4.4c6.404 0 11.6 5.195 11.6 11.6 0 6.404-5.196 11.6-11.6 11.6zm6.354-8.683c-.347-.173-2.054-.999-2.374-1.113-.32-.114-.553-.173-.785.174-.232.347-.899 1.112-1.102 1.345-.202.232-.405.26-.752.086-.347-.173-1.464-.52-2.788-1.654-.03-.025-.06-.05-.09-.076a10.29 10.29 0 01-1.83-2.509c-.202-.347-.022-.535.152-.707.157-.156.348-.405.521-.607.174-.203.232-.348.348-.58.116-.231.058-.434-.029-.607-.086-.173-.785-1.882-1.073-2.578-.289-.695-.578-.579-.785-.579h-.667c-.231 0-.607.087-.925.434-.318.347-1.217 1.16-1.217 2.84 0 1.68 1.246 3.302 1.42 3.534.174.231 2.433 3.794 5.965 5.232.833.347 1.483.554 1.99.709.836.26 1.597.223 2.199.135.671-.098 2.063-.82 2.352-1.615.29-.795.29-1.476.204-1.62-.087-.143-.319-.231-.666-.404z"/>
@@ -714,12 +1128,20 @@
      SCRIPTS
 ════════════════════════════════════════════ -->
 <script>
-  // ── Sticky nav darkening ──
+  // ── Sticky nav ──
   const nav = document.getElementById('nav');
-  const onScroll = () => {
-    nav.classList.toggle('scrolled', window.scrollY > 70);
-  };
-  window.addEventListener('scroll', onScroll, { passive: true });
+  window.addEventListener('scroll', () => {
+    nav.classList.toggle('scrolled', window.scrollY > 60);
+  }, { passive: true });
+
+  // ── Mobile menu toggle ──
+  function toggleMenu() {
+    const menu = document.getElementById('mobile-menu');
+    const btn   = document.getElementById('hamburger');
+    const open  = menu.classList.toggle('open');
+    btn.classList.toggle('open', open);
+    document.body.style.overflow = open ? 'hidden' : '';
+  }
 
   // ── Scroll reveal ──
   const revealObserver = new IntersectionObserver((entries) => {
@@ -729,10 +1151,15 @@
         revealObserver.unobserve(entry.target);
       }
     });
-  }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+  }, { threshold: 0.08, rootMargin: '0px 0px -48px 0px' });
 
-  document.querySelectorAll('.reveal, .reveal-x, .reveal-r').forEach(el => {
+  document.querySelectorAll('.reveal, .reveal-x, .reveal-r, .reveal-scale').forEach(el => {
     revealObserver.observe(el);
+  });
+
+  // ── Close mobile menu on outside tap ──
+  document.getElementById('mobile-menu').addEventListener('click', function(e) {
+    if (e.target === this) toggleMenu();
   });
 </script>
 
