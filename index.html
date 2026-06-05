@@ -1,0 +1,740 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PASTAGRAM – Pasta Bar | Sousse</title>
+  <meta name="description" content="PASTAGRAM Pasta Bar à Sousse — pâtes fraîches maison, saveurs italiennes authentiques. Ouvert tous les jours de 12h à 23h. Khzema Ouest, Sousse." />
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garant:ital,wght@0,300;0,400;0,600;0,700;1,300;1,600;1,700&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet" />
+
+  <!-- Tailwind CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            burg:       '#270809',
+            'burg-mid': '#4A1018',
+            terra:      '#C04A28',
+            'terra-lt': '#D9663F',
+            gold:       '#C4993E',
+            'gold-lt':  '#D4AF58',
+            cream:      '#F7F1E4',
+            'cream-dk': '#EDE5D0',
+            ink:        '#180404',
+          },
+          fontFamily: {
+            display: ['"Cormorant Garant"', 'Georgia', 'serif'],
+            body:    ['"DM Sans"', 'system-ui', 'sans-serif'],
+          },
+        }
+      }
+    }
+  </script>
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'DM Sans', system-ui, sans-serif; background: #F7F1E4; color: #270809; overflow-x: hidden; }
+
+    /* ── Reveal on scroll ── */
+    .reveal {
+      opacity: 0;
+      transform: translateY(32px);
+      transition: opacity 0.75s cubic-bezier(.22,1,.36,1), transform 0.75s cubic-bezier(.22,1,.36,1);
+    }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+
+    .reveal-x {
+      opacity: 0;
+      transform: translateX(-28px);
+      transition: opacity 0.75s cubic-bezier(.22,1,.36,1), transform 0.75s cubic-bezier(.22,1,.36,1);
+    }
+    .reveal-x.visible { opacity: 1; transform: translateX(0); }
+
+    .reveal-r {
+      opacity: 0;
+      transform: translateX(28px);
+      transition: opacity 0.75s cubic-bezier(.22,1,.36,1), transform 0.75s cubic-bezier(.22,1,.36,1);
+    }
+    .reveal-r.visible { opacity: 1; transform: translateX(0); }
+
+    /* ── Nav ── */
+    #nav {
+      background: transparent;
+      transition: background 0.35s ease, box-shadow 0.35s ease, backdrop-filter 0.35s ease;
+    }
+    #nav.scrolled {
+      background: rgba(30, 5, 5, 0.96);
+      box-shadow: 0 2px 24px rgba(0,0,0,.35);
+      backdrop-filter: blur(10px);
+    }
+
+    /* ── Hero ghost text ── */
+    .ghost-pasta {
+      font-family: 'Cormorant Garant', serif;
+      font-size: clamp(6rem, 18vw, 22rem);
+      font-weight: 700;
+      line-height: 1;
+      color: rgba(255,255,255,0.04);
+      letter-spacing: 0.15em;
+      user-select: none;
+      pointer-events: none;
+    }
+
+    /* ── Section label ── */
+    .section-label {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.7rem;
+      letter-spacing: 0.35em;
+      text-transform: uppercase;
+      color: #C4993E;
+    }
+
+    /* ── Gold rule under headings ── */
+    .gold-rule::after {
+      content: '';
+      display: block;
+      width: 48px;
+      height: 2px;
+      background: linear-gradient(90deg, #C4993E, #D4AF58);
+      margin: 20px auto 0;
+      border-radius: 2px;
+    }
+
+    /* ── Service cards ── */
+    .pasta-card {
+      transition: transform 0.35s cubic-bezier(.22,1,.36,1), box-shadow 0.35s cubic-bezier(.22,1,.36,1);
+    }
+    .pasta-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 28px 52px rgba(0,0,0,.25);
+    }
+    .pasta-card img {
+      transition: transform 0.6s cubic-bezier(.22,1,.36,1);
+    }
+    .pasta-card:hover img { transform: scale(1.06); }
+
+    /* ── Gallery ── */
+    .gallery-grid {
+      display: grid;
+      gap: 10px;
+      grid-template-columns: 1fr 1fr 1fr;
+      grid-template-rows: 240px 240px;
+    }
+    .gallery-grid .g-feat {
+      grid-column: 1;
+      grid-row: 1 / 3;
+    }
+    @media (max-width: 767px) {
+      .gallery-grid {
+        grid-template-columns: 1fr 1fr;
+        grid-template-rows: 180px 180px 180px;
+      }
+      .gallery-grid .g-feat {
+        grid-column: 1 / 3;
+        grid-row: 1;
+      }
+    }
+    @media (max-width: 479px) {
+      .gallery-grid {
+        grid-template-columns: 1fr;
+        grid-template-rows: auto;
+      }
+      .gallery-grid .g-feat {
+        grid-column: 1;
+        grid-row: 1;
+      }
+    }
+    .gallery-grid > div {
+      overflow: hidden;
+      border-radius: 12px;
+    }
+    .gallery-grid img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.6s cubic-bezier(.22,1,.36,1);
+    }
+    .gallery-grid > div:hover img { transform: scale(1.07); }
+
+    /* ── WhatsApp pulse ── */
+    .wa-btn {
+      animation: waPulse 2.4s ease infinite;
+    }
+    @keyframes waPulse {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.45); }
+      55%       { box-shadow: 0 0 0 14px rgba(37, 211, 102, 0); }
+    }
+
+    /* ── Star colour ── */
+    .stars { color: #F5A623; }
+
+    /* ── Wave divider ── */
+    .wave-cream svg { display: block; }
+    .wave-burg  svg { display: block; }
+
+    /* ── Hours table ── */
+    .hours-row { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid rgba(249,241,228,0.1); }
+    .hours-row:last-child { border-bottom: none; }
+  </style>
+</head>
+<body>
+
+<!-- ════════════════════════════════════════════
+     STICKY NAV
+════════════════════════════════════════════ -->
+<nav id="nav" class="fixed top-0 left-0 right-0 z-50 py-4 px-6 md:px-10 lg:px-16">
+  <div class="max-w-7xl mx-auto flex items-center justify-between">
+
+    <!-- Logo -->
+    <a href="#hero" class="flex flex-col leading-none gap-0.5">
+      <span class="font-display text-xl md:text-2xl font-bold tracking-[0.2em] text-cream">PASTAGRAM</span>
+      <span class="section-label text-[0.6rem]" style="color:#C4993E; margin-top:1px;">Pasta Bar &middot; Sousse</span>
+    </a>
+
+    <!-- Desktop links -->
+    <div class="hidden md:flex items-center gap-7">
+      <a href="#nos-pasta"  class="font-body text-xs tracking-[0.2em] uppercase text-cream/70 hover:text-gold transition-colors duration-200">Menu</a>
+      <a href="#galerie"    class="font-body text-xs tracking-[0.2em] uppercase text-cream/70 hover:text-gold transition-colors duration-200">Galerie</a>
+      <a href="#contact"    class="font-body text-xs tracking-[0.2em] uppercase text-cream/70 hover:text-gold transition-colors duration-200">Contact</a>
+      <a href="tel:+21694810110"
+         class="bg-terra hover:bg-terra-lt text-cream text-xs font-medium tracking-[0.15em] uppercase px-7 py-2.5 rounded-full transition-colors duration-200">
+        Commander
+      </a>
+    </div>
+
+    <!-- Mobile CTA -->
+    <a href="tel:+21694810110"
+       class="md:hidden bg-terra text-cream text-xs font-medium px-5 py-2.5 rounded-full">
+      Appeler
+    </a>
+  </div>
+</nav>
+
+
+<!-- ════════════════════════════════════════════
+     HERO
+════════════════════════════════════════════ -->
+<section id="hero" class="relative min-h-screen flex flex-col items-center justify-center overflow-hidden bg-burg">
+
+  <!-- Background photo -->
+  <div class="absolute inset-0">
+    <img
+      src="https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=1800&q=80&auto=format&fit=crop"
+      alt="Ambiance du Pasta Bar PASTAGRAM à Sousse"
+      class="w-full h-full object-cover"
+    />
+    <div class="absolute inset-0" style="background: linear-gradient(160deg, rgba(27,5,5,0.92) 0%, rgba(39,8,9,0.82) 50%, rgba(60,14,14,0.88) 100%);"></div>
+  </div>
+
+  <!-- Ghost PASTA text -->
+  <div class="absolute inset-0 flex items-center justify-center overflow-hidden" aria-hidden="true">
+    <span class="ghost-pasta">PASTA</span>
+  </div>
+
+  <!-- Decorative vertical line -->
+  <div class="absolute left-8 top-0 bottom-0 w-px hidden lg:block" style="background: linear-gradient(to bottom, transparent, rgba(196,153,62,0.3) 30%, rgba(196,153,62,0.3) 70%, transparent);"></div>
+
+  <!-- Content -->
+  <div class="relative z-10 text-center px-6 max-w-5xl mx-auto pt-24 pb-20">
+
+    <!-- Google rating pill -->
+    <div class="inline-flex items-center gap-2.5 bg-white/8 border border-gold/25 rounded-full px-5 py-2 mb-10">
+      <span class="stars text-sm">&#9733;&#9733;&#9733;&#9733;&#9733;</span>
+      <span class="font-body text-cream text-sm font-medium">4,8 sur Google</span>
+      <span class="w-px h-3 bg-cream/20 inline-block"></span>
+      <span class="font-body text-cream/50 text-xs">144 avis</span>
+    </div>
+
+    <h1 class="font-display text-cream font-bold leading-none tracking-widest mb-3"
+        style="font-size: clamp(3.5rem, 11vw, 9rem);">
+      PASTAGRAM
+    </h1>
+
+    <p class="font-display italic text-gold font-light tracking-wide mb-6"
+       style="font-size: clamp(1.25rem, 3vw, 2.25rem);">
+      Pasta Bar
+    </p>
+
+    <p class="font-body text-cream/65 font-light leading-relaxed mb-12 max-w-lg mx-auto"
+       style="font-size: clamp(1rem, 1.5vw, 1.15rem);">
+      Des pâtes fraîches préparées avec passion,<br class="hidden sm:block"/>
+      des saveurs d'Italie au c&oelig;ur de Sousse.
+    </p>
+
+    <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+      <a href="tel:+21694810110"
+         class="w-full sm:w-auto bg-terra hover:bg-terra-lt text-cream font-body font-medium text-sm tracking-[0.15em] uppercase px-10 py-4 rounded-full transition-all duration-200 hover:scale-105 shadow-lg">
+        Réserver une table
+      </a>
+      <a href="#nos-pasta"
+         class="w-full sm:w-auto border border-cream/30 text-cream hover:border-gold hover:text-gold font-body font-medium text-sm tracking-[0.15em] uppercase px-10 py-4 rounded-full transition-all duration-200">
+        Voir la carte
+      </a>
+    </div>
+  </div>
+
+  <!-- Scroll cue -->
+  <div class="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 opacity-50">
+    <span class="font-body text-cream text-[0.6rem] tracking-[0.3em] uppercase">Défiler</span>
+    <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true" class="animate-bounce">
+      <path d="M3 6l6 6 6-6" stroke="#F7F1E4" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+  </div>
+
+  <!-- Wave at bottom -->
+  <div class="absolute bottom-0 left-0 right-0 wave-cream" aria-hidden="true">
+    <svg viewBox="0 0 1440 64" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg" width="100%" height="64">
+      <path d="M0,32 C240,64 480,0 720,32 C960,64 1200,0 1440,32 L1440,64 L0,64 Z" fill="#F7F1E4"/>
+    </svg>
+  </div>
+</section>
+
+
+<!-- ════════════════════════════════════════════
+     CONCEPT STRIP
+════════════════════════════════════════════ -->
+<section class="py-20 md:py-28 px-6 bg-cream">
+  <div class="max-w-3xl mx-auto text-center reveal">
+    <p class="section-label mb-5">Notre concept</p>
+    <h2 class="font-display text-burg font-bold gold-rule"
+        style="font-size: clamp(2.2rem, 5vw, 3.5rem); line-height: 1.1;">
+      L&rsquo;art de la pasta,<br/>réinventé &agrave; Sousse
+    </h2>
+    <p class="font-body text-burg/65 leading-relaxed mt-10 max-w-2xl mx-auto"
+       style="font-size: clamp(1rem, 1.4vw, 1.1rem);">
+      Chez PASTAGRAM, chaque assiette est une invitation au voyage. Pâtes fraîches façonnées à la main, sauces longuement mijotées et ingrédients soigneusement sélectionnés — une cuisine italienne sincère dans un cadre chaleureux au cœur de Khzema Ouest.
+    </p>
+  </div>
+
+  <!-- Three pillars -->
+  <div class="max-w-5xl mx-auto mt-16 grid grid-cols-1 md:grid-cols-3 gap-8">
+    <div class="text-center reveal" style="transition-delay:.1s">
+      <div class="w-14 h-14 rounded-full bg-burg/8 flex items-center justify-center mx-auto mb-4">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#C4993E" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M12 2a10 10 0 100 20A10 10 0 0012 2z"/>
+          <path d="M12 6v6l4 2"/>
+        </svg>
+      </div>
+      <h3 class="font-display text-burg text-xl font-semibold mb-2">Frais &bull; Fait maison</h3>
+      <p class="font-body text-burg/55 text-sm leading-relaxed">Pâtes pétries et façonnées chaque jour, aucun compromis sur la qualité.</p>
+    </div>
+    <div class="text-center reveal" style="transition-delay:.2s">
+      <div class="w-14 h-14 rounded-full bg-burg/8 flex items-center justify-center mx-auto mb-4">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#C4993E" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/>
+        </svg>
+      </div>
+      <h3 class="font-display text-burg text-xl font-semibold mb-2">Cuisin&eacute; avec passion</h3>
+      <p class="font-body text-burg/55 text-sm leading-relaxed">Des recettes élaborées avec amour, inspirées des trattorie italiennes.</p>
+    </div>
+    <div class="text-center reveal" style="transition-delay:.3s">
+      <div class="w-14 h-14 rounded-full bg-burg/8 flex items-center justify-center mx-auto mb-4">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#C4993E" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <circle cx="12" cy="12" r="10"/>
+          <path d="M8.56 2.75c4.37 6.03 6.02 9.42 8.03 17.72m2.54-15.38c-3.72 4.35-8.94 5.66-16.88 5.85m19.5 1.9c-3.5-.93-6.63-.82-8.94 0-2.58.92-5.01 2.86-7.44 6.32"/>
+        </svg>
+      </div>
+      <h3 class="font-display text-burg text-xl font-semibold mb-2">Ouvert tous les jours</h3>
+      <p class="font-body text-burg/55 text-sm leading-relaxed">De 12h à 23h — que ce soit pour un déjeuner tranquille ou un dîner en famille.</p>
+    </div>
+  </div>
+</section>
+
+
+<!-- ════════════════════════════════════════════
+     NOS PASTA (Services)
+════════════════════════════════════════════ -->
+<section id="nos-pasta" class="relative py-24 md:py-32 px-6 bg-burg overflow-hidden">
+
+  <!-- Subtle background pattern -->
+  <div class="absolute inset-0 opacity-5 pointer-events-none" aria-hidden="true"
+       style="background-image: radial-gradient(circle, #C4993E 1px, transparent 1px); background-size: 36px 36px;"></div>
+
+  <!-- Wave top -->
+  <div class="absolute top-0 left-0 right-0 wave-cream" aria-hidden="true" style="transform: rotate(180deg) scaleX(-1);">
+    <svg viewBox="0 0 1440 60" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg" width="100%" height="60">
+      <path d="M0,30 C360,60 720,0 1080,30 C1260,45 1380,20 1440,30 L1440,60 L0,60 Z" fill="#F7F1E4"/>
+    </svg>
+  </div>
+
+  <div class="max-w-7xl mx-auto relative z-10">
+
+    <div class="text-center mb-16 reveal">
+      <p class="section-label mb-5">Notre sélection</p>
+      <h2 class="font-display text-cream font-bold gold-rule"
+          style="font-size: clamp(2.2rem, 5vw, 3.5rem);">
+        Nos Pastas
+      </h2>
+      <p class="font-body text-cream/55 mt-10 text-sm max-w-md mx-auto leading-relaxed">
+        De la classique Carbonara aux créations méditerranéennes — des saveurs pour tous les palais.
+      </p>
+    </div>
+
+    <!-- Cards grid -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+
+      <!-- 1 -->
+      <article class="pasta-card bg-burg-mid rounded-2xl overflow-hidden reveal" style="transition-delay:.05s">
+        <div class="h-52 overflow-hidden">
+          <img src="https://images.unsplash.com/photo-1551183053-bf91798d2e8?w=700&q=80&auto=format&fit=crop"
+               alt="Tagliatelle Bolognaise" class="w-full h-full object-cover" />
+        </div>
+        <div class="p-6">
+          <span class="font-body text-gold text-[0.6rem] tracking-[0.25em] uppercase">Signature</span>
+          <h3 class="font-display text-cream text-2xl font-semibold mt-1 mb-2">Tagliatelle Bolognaise</h3>
+          <p class="font-body text-cream/55 text-sm leading-relaxed">Viande de bœuf mijotée lentement avec tomates fraîches, herbes du jardin et vin rouge. Le grand classique dans sa version la plus authentique.</p>
+        </div>
+      </article>
+
+      <!-- 2 -->
+      <article class="pasta-card bg-burg-mid rounded-2xl overflow-hidden reveal" style="transition-delay:.1s">
+        <div class="h-52 overflow-hidden">
+          <img src="https://images.unsplash.com/photo-1473093295043-cdd812d0e601?w=700&q=80&auto=format&fit=crop"
+               alt="Spaghetti Carbonara" class="w-full h-full object-cover" />
+        </div>
+        <div class="p-6">
+          <span class="font-body text-gold text-[0.6rem] tracking-[0.25em] uppercase">Populaire</span>
+          <h3 class="font-display text-cream text-2xl font-semibold mt-1 mb-2">Spaghetti Carbonara</h3>
+          <p class="font-body text-cream/55 text-sm leading-relaxed">Crème onctueuse, lardons dorés, parmesan affiné et œuf frais — la recette romaine dans toute sa splendeur crémeuse.</p>
+        </div>
+      </article>
+
+      <!-- 3 -->
+      <article class="pasta-card bg-burg-mid rounded-2xl overflow-hidden reveal" style="transition-delay:.15s">
+        <div class="h-52 overflow-hidden">
+          <img src="https://images.unsplash.com/photo-1563379926898-05f4575a45d8?w=700&q=80&auto=format&fit=crop"
+               alt="Pasta aux Fruits de Mer" class="w-full h-full object-cover" />
+        </div>
+        <div class="p-6">
+          <span class="font-body text-gold text-[0.6rem] tracking-[0.25em] uppercase">Coup de cœur</span>
+          <h3 class="font-display text-cream text-2xl font-semibold mt-1 mb-2">Pasta Fruits de Mer</h3>
+          <p class="font-body text-cream/55 text-sm leading-relaxed">Crevettes, calamars et moules dans une sauce tomate légère parfumée au basilic frais et zeste de citron.</p>
+        </div>
+      </article>
+
+      <!-- 4 -->
+      <article class="pasta-card bg-burg-mid rounded-2xl overflow-hidden reveal" style="transition-delay:.2s">
+        <div class="h-52 overflow-hidden">
+          <img src="https://images.unsplash.com/photo-1574894709920-11b28be6d622?w=700&q=80&auto=format&fit=crop"
+               alt="Penne Arrabiata" class="w-full h-full object-cover" />
+        </div>
+        <div class="p-6">
+          <span class="font-body text-terra-lt text-[0.6rem] tracking-[0.25em] uppercase">Épicé</span>
+          <h3 class="font-display text-cream text-2xl font-semibold mt-1 mb-2">Penne Arrabiata</h3>
+          <p class="font-body text-cream/55 text-sm leading-relaxed">Sauce tomate relevée, ail doré, piment calabrese et persil frais — pour les amateurs de caractère et de piquant.</p>
+        </div>
+      </article>
+
+      <!-- 5 -->
+      <article class="pasta-card bg-burg-mid rounded-2xl overflow-hidden reveal" style="transition-delay:.25s">
+        <div class="h-52 overflow-hidden">
+          <img src="https://images.unsplash.com/photo-1621996346565-e3dbc646d9a9?w=700&q=80&auto=format&fit=crop"
+               alt="Pasta Végétarienne" class="w-full h-full object-cover" />
+        </div>
+        <div class="p-6">
+          <span class="font-body text-gold text-[0.6rem] tracking-[0.25em] uppercase">Végétarien</span>
+          <h3 class="font-display text-cream text-2xl font-semibold mt-1 mb-2">Pasta Végétarienne</h3>
+          <p class="font-body text-cream/55 text-sm leading-relaxed">Légumes de saison grillés, pesto basilic maison, parmesan râpé et roquette fraîche — généreuse et légère à la fois.</p>
+        </div>
+      </article>
+
+      <!-- 6 -->
+      <article class="pasta-card bg-burg-mid rounded-2xl overflow-hidden reveal" style="transition-delay:.3s">
+        <div class="h-52 overflow-hidden">
+          <img src="https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=700&q=80&auto=format&fit=crop"
+               alt="Lasagne Maison" class="w-full h-full object-cover" />
+        </div>
+        <div class="p-6">
+          <span class="font-body text-gold text-[0.6rem] tracking-[0.25em] uppercase">Fait maison</span>
+          <h3 class="font-display text-cream text-2xl font-semibold mt-1 mb-2">Lasagne Maison</h3>
+          <p class="font-body text-cream/55 text-sm leading-relaxed">Couches généreuses de pâtes fraîches, béchamel veloutée, bolognaise maison et gratin doré au four — réconfort absolu.</p>
+        </div>
+      </article>
+
+    </div><!-- /grid -->
+
+    <div class="text-center mt-14 reveal">
+      <a href="tel:+21694810110"
+         class="inline-block bg-terra hover:bg-terra-lt text-cream font-body font-medium text-sm tracking-[0.15em] uppercase px-12 py-4 rounded-full transition-all duration-200 hover:scale-105 shadow-lg">
+        Commander par téléphone
+      </a>
+    </div>
+
+  </div>
+
+  <!-- Wave bottom -->
+  <div class="absolute bottom-0 left-0 right-0 wave-cream" aria-hidden="true">
+    <svg viewBox="0 0 1440 60" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg" width="100%" height="60">
+      <path d="M0,30 C360,60 720,0 1080,30 C1260,45 1380,20 1440,30 L1440,60 L0,60 Z" fill="#F7F1E4"/>
+    </svg>
+  </div>
+</section>
+
+
+<!-- ════════════════════════════════════════════
+     GALLERY
+════════════════════════════════════════════ -->
+<section id="galerie" class="py-24 md:py-32 px-6 bg-cream">
+  <div class="max-w-7xl mx-auto">
+
+    <div class="text-center mb-14 reveal">
+      <p class="section-label mb-5">En images</p>
+      <h2 class="font-display text-burg font-bold gold-rule"
+          style="font-size: clamp(2.2rem, 5vw, 3.5rem);">
+        La Galerie
+      </h2>
+    </div>
+
+    <div class="gallery-grid reveal">
+      <!-- Featured: business photo from Google -->
+      <div class="g-feat">
+        <img
+          src="https://lh3.googleusercontent.com/gps-cs-s/APNQkAHYy7tzwPpuRCKTfCqbmILHBqOBh_AkxqMUVWT1lnNWsqzit53MSAN2diuFGMQYG9FgiyMgvi3OAlunnJ6-p1bf0awvphB8i2wz79xZlqwCAKK-poZwBmVMKwqI2lM7o6vob6kHb9-PiQoF=w1000-h1000-c-n"
+          alt="Plat PASTAGRAM — spécialité maison"
+        />
+      </div>
+      <!-- Unsplash fills -->
+      <div>
+        <img src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=700&q=80&auto=format&fit=crop"
+             alt="Pâtes fraîches" />
+      </div>
+      <div>
+        <img src="https://images.unsplash.com/photo-1481349518771-20055b2a7b24?w=700&q=80&auto=format&fit=crop"
+             alt="Ingrédients frais" />
+      </div>
+      <div>
+        <img src="https://images.unsplash.com/photo-1559339352-11d035aa65de?w=700&q=80&auto=format&fit=crop"
+             alt="Pasta préparation" />
+      </div>
+      <div>
+        <img src="https://images.unsplash.com/photo-1551504734-5ee1c4a1479b?w=700&q=80&auto=format&fit=crop"
+             alt="Spaghetti maison" />
+      </div>
+    </div>
+
+  </div>
+</section>
+
+
+<!-- ════════════════════════════════════════════
+     CONTACT
+════════════════════════════════════════════ -->
+<section id="contact" class="relative py-24 md:py-32 px-6 bg-burg overflow-hidden">
+
+  <!-- Wave top -->
+  <div class="absolute top-0 left-0 right-0" aria-hidden="true" style="transform: rotate(180deg) scaleX(-1);">
+    <svg viewBox="0 0 1440 60" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg" width="100%" height="60">
+      <path d="M0,30 C360,60 720,0 1080,30 C1260,45 1380,20 1440,30 L1440,60 L0,60 Z" fill="#F7F1E4"/>
+    </svg>
+  </div>
+
+  <div class="max-w-7xl mx-auto relative z-10">
+
+    <div class="text-center mb-16 reveal">
+      <p class="section-label mb-5">Nous trouver</p>
+      <h2 class="font-display text-cream font-bold gold-rule"
+          style="font-size: clamp(2.2rem, 5vw, 3.5rem);">
+        Contact &amp; Acc&egrave;s
+      </h2>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-5 gap-10 lg:gap-14">
+
+      <!-- Left info column -->
+      <div class="lg:col-span-2 space-y-8">
+
+        <!-- Address -->
+        <div class="flex gap-5 reveal-x" style="transition-delay:.05s">
+          <div class="w-11 h-11 rounded-full flex items-center justify-center flex-shrink-0"
+               style="background: rgba(196,153,62,0.15);">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#C4993E" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/>
+              <circle cx="12" cy="10" r="3"/>
+            </svg>
+          </div>
+          <div>
+            <p class="section-label mb-1.5">Adresse</p>
+            <address class="font-body text-cream not-italic leading-relaxed text-sm">
+              Rue Hssan Ben Said<br/>
+              Khzema Ouest, Sousse 4071<br/>
+              Tunisie
+            </address>
+          </div>
+        </div>
+
+        <!-- Phone -->
+        <div class="flex gap-5 reveal-x" style="transition-delay:.1s">
+          <div class="w-11 h-11 rounded-full flex items-center justify-center flex-shrink-0"
+               style="background: rgba(196,153,62,0.15);">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#C4993E" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 11.5a19.79 19.79 0 01-3.07-8.72A2 2 0 012.18 1h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.91 8.15a16 16 0 006 6l.62-.62a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/>
+            </svg>
+          </div>
+          <div>
+            <p class="section-label mb-1.5">Téléphone</p>
+            <a href="tel:+21694810110"
+               class="font-body text-cream text-lg hover:text-gold transition-colors duration-200">
+              +216 94 810 110
+            </a>
+          </div>
+        </div>
+
+        <!-- Hours -->
+        <div class="reveal-x" style="transition-delay:.15s">
+          <div class="flex gap-5 mb-4">
+            <div class="w-11 h-11 rounded-full flex items-center justify-center flex-shrink-0"
+                 style="background: rgba(196,153,62,0.15);">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#C4993E" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <circle cx="12" cy="12" r="10"/>
+                <polyline points="12 6 12 12 16 14"/>
+              </svg>
+            </div>
+            <div>
+              <p class="section-label mb-1">Horaires</p>
+              <p class="font-body text-cream text-sm">Tous les jours</p>
+            </div>
+          </div>
+          <div class="ml-16 border border-white/10 rounded-xl overflow-hidden">
+            <div class="hours-row px-4">
+              <span class="font-body text-cream/60 text-sm">Lundi – Jeudi</span>
+              <span class="font-body text-gold font-medium text-sm">12:00 – 23:00</span>
+            </div>
+            <div class="hours-row px-4">
+              <span class="font-body text-cream/60 text-sm">Vendredi</span>
+              <span class="font-body text-gold font-medium text-sm">12:00 – 23:00</span>
+            </div>
+            <div class="hours-row px-4">
+              <span class="font-body text-cream/60 text-sm">Samedi – Dimanche</span>
+              <span class="font-body text-gold font-medium text-sm">12:00 – 23:00</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Rating block -->
+        <div class="ml-0 reveal-x" style="transition-delay:.2s">
+          <div class="inline-flex items-center gap-4 bg-burg-mid border border-white/8 rounded-2xl px-6 py-5">
+            <span class="font-display text-cream font-bold" style="font-size:3rem; line-height:1;">4,8</span>
+            <div>
+              <div class="stars text-lg mb-1">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+              <p class="font-body text-cream/50 text-xs">144 avis Google</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- CTA -->
+        <div class="reveal-x" style="transition-delay:.25s">
+          <a href="tel:+21694810110"
+             class="inline-flex items-center gap-3 bg-terra hover:bg-terra-lt text-cream font-body font-medium text-sm tracking-[0.1em] uppercase px-8 py-3.5 rounded-full transition-all duration-200 hover:scale-105">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 11.5a19.79 19.79 0 01-3.07-8.72A2 2 0 012.18 1h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.91 8.15a16 16 0 006 6l.62-.62a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/>
+            </svg>
+            Appeler maintenant
+          </a>
+        </div>
+
+      </div><!-- /left -->
+
+      <!-- Map -->
+      <div class="lg:col-span-3 reveal-r" style="min-height:380px;">
+        <div class="rounded-2xl overflow-hidden shadow-2xl border border-white/8 h-full" style="min-height:380px;">
+          <iframe
+            src="https://maps.google.com/maps?q=khzema+ouest+Rue+Hssan+Ben+Said+Sousse+4071+Tunisie&output=embed&z=16"
+            width="100%"
+            height="100%"
+            style="border:0; min-height:380px; display:block;"
+            allowfullscreen=""
+            loading="lazy"
+            referrerpolicy="no-referrer-when-downgrade"
+            title="Localisation PASTAGRAM sur Google Maps"
+          ></iframe>
+        </div>
+      </div>
+
+    </div><!-- /grid -->
+  </div>
+
+  <!-- Wave bottom -->
+  <div class="absolute bottom-0 left-0 right-0" aria-hidden="true">
+    <svg viewBox="0 0 1440 48" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg" width="100%" height="48">
+      <path d="M0,24 C480,48 960,0 1440,24 L1440,48 L0,48 Z" fill="#180404"/>
+    </svg>
+  </div>
+</section>
+
+
+<!-- ════════════════════════════════════════════
+     FOOTER
+════════════════════════════════════════════ -->
+<footer class="bg-ink py-12 px-6 text-center">
+  <a href="#hero">
+    <span class="font-display text-cream text-3xl font-bold tracking-[0.25em]">PASTAGRAM</span>
+  </a>
+  <p class="font-body text-cream/35 text-xs tracking-[0.25em] uppercase mt-2 mb-6">Pasta Bar &bull; Sousse, Tunisie</p>
+
+  <div class="flex items-center justify-center gap-6 mb-8">
+    <a href="tel:+21694810110"
+       class="font-body text-cream/50 hover:text-gold text-sm transition-colors">
+      +216 94 810 110
+    </a>
+    <span class="text-cream/20">|</span>
+    <span class="font-body text-cream/50 text-sm">Khzema Ouest, Sousse</span>
+    <span class="text-cream/20">|</span>
+    <span class="font-body text-cream/50 text-sm">12h00 – 23h00</span>
+  </div>
+
+  <div class="w-24 h-px bg-white/10 mx-auto mb-6"></div>
+  <p class="font-body text-cream/25 text-xs">&copy; 2024 PASTAGRAM. Tous droits réservés.</p>
+</footer>
+
+
+<!-- ════════════════════════════════════════════
+     FLOATING WHATSAPP BUTTON
+════════════════════════════════════════════ -->
+<a href="https://wa.me/21694810110"
+   target="_blank"
+   rel="noopener noreferrer"
+   class="wa-btn fixed bottom-6 right-6 z-50 w-14 h-14 rounded-full flex items-center justify-center shadow-xl hover:scale-110 transition-transform duration-200"
+   style="background:#25D366;"
+   aria-label="Contacter PASTAGRAM sur WhatsApp">
+  <svg width="28" height="28" viewBox="0 0 32 32" fill="white" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <path d="M16 2C8.268 2 2 8.268 2 16c0 2.444.655 4.734 1.796 6.706L2 30l7.496-1.763A13.945 13.945 0 0016 30c7.732 0 14-6.268 14-14S23.732 2 16 2zm0 25.6a11.56 11.56 0 01-5.88-1.598l-.42-.25-4.448 1.048 1.066-4.315-.275-.445A11.555 11.555 0 014.4 16C4.4 9.595 9.595 4.4 16 4.4c6.404 0 11.6 5.195 11.6 11.6 0 6.404-5.196 11.6-11.6 11.6zm6.354-8.683c-.347-.173-2.054-.999-2.374-1.113-.32-.114-.553-.173-.785.174-.232.347-.899 1.112-1.102 1.345-.202.232-.405.26-.752.086-.347-.173-1.464-.52-2.788-1.654-.03-.025-.06-.05-.09-.076a10.29 10.29 0 01-1.83-2.509c-.202-.347-.022-.535.152-.707.157-.156.348-.405.521-.607.174-.203.232-.348.348-.58.116-.231.058-.434-.029-.607-.086-.173-.785-1.882-1.073-2.578-.289-.695-.578-.579-.785-.579h-.667c-.231 0-.607.087-.925.434-.318.347-1.217 1.16-1.217 2.84 0 1.68 1.246 3.302 1.42 3.534.174.231 2.433 3.794 5.965 5.232.833.347 1.483.554 1.99.709.836.26 1.597.223 2.199.135.671-.098 2.063-.82 2.352-1.615.29-.795.29-1.476.204-1.62-.087-.143-.319-.231-.666-.404z"/>
+  </svg>
+</a>
+
+
+<!-- ════════════════════════════════════════════
+     SCRIPTS
+════════════════════════════════════════════ -->
+<script>
+  // ── Sticky nav darkening ──
+  const nav = document.getElementById('nav');
+  const onScroll = () => {
+    nav.classList.toggle('scrolled', window.scrollY > 70);
+  };
+  window.addEventListener('scroll', onScroll, { passive: true });
+
+  // ── Scroll reveal ──
+  const revealObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+        revealObserver.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+
+  document.querySelectorAll('.reveal, .reveal-x, .reveal-r').forEach(el => {
+    revealObserver.observe(el);
+  });
+</script>
+
+</body>
+</html>
